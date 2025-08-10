@@ -604,11 +604,13 @@ class Profiler:
 
         # Filter by min_duration
         if self.config.min_duration > 0:
-            statistics = dict({
-                k: v
-                for k, v in statistics.items()
-                if v["total_duration"] >= self.config.min_duration
-            })
+            statistics = dict(
+                {
+                    k: v
+                    for k, v in statistics.items()
+                    if v["total_duration"] >= self.config.min_duration
+                }
+            )
 
         total_calls = int(sum(stats["calls"] for stats in statistics.values()))
         unique_functions = len(statistics)

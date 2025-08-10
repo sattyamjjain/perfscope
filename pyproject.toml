@@ -7,7 +7,7 @@ name = "pycallmeter"
 version = "1.0.0"
 description = "🚀 The Ultimate Python Performance Profiler & APM Tool - Production-Ready Performance Monitoring, Memory Tracking, Call Tree Analysis & Bottleneck Detection for Django, Flask, FastAPI, Async Applications, Data Science & Machine Learning"
 readme = "README.md"
-license = "MIT"
+license = {text = "MIT"}
 authors = [
     {name = "Sattyam Jain", email = "sattyamjain@example.com"},
 ]

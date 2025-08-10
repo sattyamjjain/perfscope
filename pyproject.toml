@@ -24,8 +24,6 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     
-    # License
-    "License :: OSI Approved :: MIT License",
     
     # Operating Systems
     "Operating System :: OS Independent",

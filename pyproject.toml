@@ -7,7 +7,7 @@ name = "pycallmeter"
 version = "1.0.0"
 description = "🚀 The Ultimate Python Performance Profiler & APM Tool - Production-Ready Performance Monitoring, Memory Tracking, Call Tree Analysis & Bottleneck Detection for Django, Flask, FastAPI, Async Applications, Data Science & Machine Learning"
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
     {name = "Sattyam Jain", email = "sattyamjain@example.com"},
 ]
@@ -218,10 +218,13 @@ addopts = ["-v", "--tb=short"]
 [tool.ruff]
 line-length = 100
 target-version = "py38"
+
+[tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "B", "UP"]
 ignore = ["E501"]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
+ignore_missing_imports = true

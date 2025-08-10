@@ -8,19 +8,18 @@ import gc
 import inspect
 import json
 import logging
-import os
 import sys
 import threading
 import time
 import tracemalloc
 from collections import defaultdict, deque
-from contextlib import contextmanager
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Union, Deque
+from typing import Any, Callable
 
 try:
     import psutil
+
     HAS_PSUTIL = True
 except ImportError:
     HAS_PSUTIL = False
@@ -33,8 +32,8 @@ if not logger.handlers:
     handler = logging.StreamHandler()
     handler.setFormatter(
         logging.Formatter(
-            '%(asctime)s.%(msecs)03d | %(levelname)-8s | [PyCallMeter] %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            "%(asctime)s.%(msecs)03d | %(levelname)-8s | [PyCallMeter] %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
         )
     )
     logger.addHandler(handler)
@@ -49,26 +48,26 @@ class PerformanceMetrics:
 
     # Timing metrics
     start_time: float
-    end_time: Optional[float] = None
+    end_time: float | None = None
     cpu_time_start: float = field(default_factory=time.process_time)
-    cpu_time_end: Optional[float] = None
+    cpu_time_end: float | None = None
 
     # Memory metrics
-    memory_start: Optional[int] = None
-    memory_end: Optional[int] = None
-    memory_peak: Optional[int] = None
-    gc_count_start: Optional[Tuple[int, int, int]] = None
-    gc_count_end: Optional[Tuple[int, int, int]] = None
+    memory_start: int | None = None
+    memory_end: int | None = None
+    memory_peak: int | None = None
+    gc_count_start: tuple[int, int, int] | None = None
+    gc_count_end: tuple[int, int, int] | None = None
 
     # Thread info
     thread_id: int = field(default_factory=threading.get_ident)
     thread_name: str = field(default_factory=lambda: threading.current_thread().name)
 
     # Context
-    args_size: Optional[int] = None
-    kwargs_size: Optional[int] = None
-    return_size: Optional[int] = None
-    exception: Optional[str] = None
+    args_size: int | None = None
+    kwargs_size: int | None = None
+    return_size: int | None = None
+    exception: str | None = None
 
     @property
     def wall_time(self) -> float:
@@ -92,10 +91,10 @@ class PerformanceMetrics:
         return self.memory_end - self.memory_start
 
     @property
-    def gc_collections(self) -> Optional[Tuple[int, int, int]]:
+    def gc_collections(self) -> tuple[int, int, int] | None:
         """GC collections that occurred during execution."""
         if self.gc_count_start and self.gc_count_end:
-            return tuple(e - s for e, s in zip(self.gc_count_end, self.gc_count_start))
+            return tuple(e - s for e, s in zip(self.gc_count_end, self.gc_count_start))  # type: ignore[return-value]
         return None
 
 
@@ -115,8 +114,8 @@ class CallInfo:
 
     # Hierarchy
     call_depth: int = 0
-    children: List[CallInfo] = field(default_factory=list)
-    parent_id: Optional[int] = None
+    children: list[CallInfo] = field(default_factory=list)
+    parent_id: int | None = None
     call_id: int = field(default_factory=lambda: id(object()))
 
     # Additional info
@@ -150,11 +149,11 @@ class PerformanceLogger:
         """Log function call start with production-ready format."""
         if not self.config.log_calls:
             return
-        
+
         # Only log detailed tracing if explicitly enabled
         if not self.detailed_tracing:
             return
-            
+
         # For detailed tracing, only log root functions to avoid clutter
         if call_info.call_depth == 0:
             self.logger.info(f"PROFILING: {call_info.qualname}")
@@ -166,38 +165,37 @@ class PerformanceLogger:
 
         # Log all significant function calls (not just root)
         wall_ms = call_info.metrics.wall_time * 1000
-        
+
         # Only log functions that took meaningful time (>0.1ms) or are root functions
         if wall_ms >= 0.1 or call_info.call_depth == 0:
             cpu_ms = call_info.metrics.cpu_time * 1000
-            
+
             # Single-line performance summary with function name
             summary_parts = [f"PROFILED[{call_info.qualname}]"]
             summary_parts.append(f"time={wall_ms:.2f}ms")
             summary_parts.append(f"cpu={cpu_ms:.2f}ms")
-            
+
             # CPU efficiency
             if wall_ms > 0:
                 cpu_efficiency = (cpu_ms / wall_ms) * 100
                 summary_parts.append(f"efficiency={cpu_efficiency:.1f}%")
-            
+
             # Memory if significant
             if call_info.metrics.memory_delta:
                 delta_mb = call_info.metrics.memory_delta / (1024 * 1024)
                 if abs(delta_mb) >= 0.01:  # Only show if >= 10KB
                     sign = "+" if delta_mb >= 0 else ""
                     summary_parts.append(f"mem={sign}{delta_mb:.2f}MB")
-            
+
             # Nested calls if any
             if call_info.children:
                 summary_parts.append(f"nested={len(call_info.children)}")
-            
-            # Depth indicator for nested functions  
+
+            # Depth indicator for nested functions
             if call_info.call_depth > 0:
                 summary_parts.append(f"depth={call_info.call_depth}")
-            
-            self.logger.info(" ".join(summary_parts))
 
+            self.logger.info(" ".join(summary_parts))
 
     def log_exception(self, call_info: CallInfo, exception: Exception) -> None:
         """Log function exception."""
@@ -211,42 +209,45 @@ class PerformanceLogger:
         # Only log summary for meaningful profiles (>1ms total or with bottlenecks)
         if report.total_duration < 0.001 and not report.statistics:
             return
-            
+
         # Single-line summary for production
         summary_parts = ["SESSION SUMMARY"]
         summary_parts.append(f"duration={report.total_duration:.3f}s")
         summary_parts.append(f"cpu={report.total_cpu_time:.3f}s")
         summary_parts.append(f"efficiency={report.cpu_efficiency:.1%}")
-        
+
         if report.total_calls > 0:
             summary_parts.append(f"calls={report.total_calls}")
         if report.unique_functions > 0:
             summary_parts.append(f"functions={report.unique_functions}")
-        
+
         # Memory if significant
         if report.memory_start and report.memory_end:
             delta = (report.memory_end - report.memory_start) / (1024 * 1024)
             if abs(delta) >= 0.01:  # Only show if >= 10KB
                 summary_parts.append(f"mem={delta:+.2f}MB")
-        
+
         self.logger.info(" ".join(summary_parts))
-        
+
         # Only log significant bottlenecks (functions taking >15% of total time)
         bottlenecks = [
-            (name, stats) for name, stats in report.statistics.items()
-            if stats['total_duration'] / report.total_duration > 0.15
+            (name, stats)
+            for name, stats in report.statistics.items()
+            if stats["total_duration"] / report.total_duration > 0.15
         ]
 
         if bottlenecks:
             for name, stats in bottlenecks:
-                percentage = (stats['total_duration'] / report.total_duration) * 100
+                percentage = (stats["total_duration"] / report.total_duration) * 100
                 self.logger.warning(
                     f"BOTTLENECK[{name}] {percentage:.1f}% runtime "
                     f"({stats['total_duration'] * 1000:.1f}ms)"
                 )
 
         # Exception summary
-        exceptions = [(n, s) for n, s in report.statistics.items() if s.get('exceptions', 0) > 0]
+        exceptions = [
+            (n, s) for n, s in report.statistics.items() if s.get("exceptions", 0) > 0
+        ]
         if exceptions:
             for name, stats in exceptions:
                 self.logger.error(f"ERRORS[{name}] {stats['exceptions']} exceptions")
@@ -260,12 +261,12 @@ class ProfileReport:
     total_cpu_time: float
     total_calls: int
     unique_functions: int
-    call_tree: List[CallInfo]
-    statistics: Dict[str, Dict[str, Any]]
-    memory_start: Optional[int] = None
-    memory_end: Optional[int] = None
-    memory_peak: Optional[int] = None
-    thread_stats: Dict[str, Dict] = field(default_factory=dict)
+    call_tree: list[CallInfo]
+    statistics: dict[str, dict[str, Any]]
+    memory_start: int | None = None
+    memory_end: int | None = None
+    memory_peak: int | None = None
+    thread_stats: dict[str, dict] = field(default_factory=dict)
 
     @property
     def cpu_efficiency(self) -> float:
@@ -274,7 +275,7 @@ class ProfileReport:
             return 0
         return min(self.total_cpu_time / self.total_duration, 1.0)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Export report as dictionary."""
         return {
             "total_duration": self.total_duration,
@@ -282,9 +283,15 @@ class ProfileReport:
             "cpu_efficiency": self.cpu_efficiency,
             "total_calls": self.total_calls,
             "unique_functions": self.unique_functions,
-            "memory_start_mb": self.memory_start / (1024 * 1024) if self.memory_start else None,
-            "memory_end_mb": self.memory_end / (1024 * 1024) if self.memory_end else None,
-            "memory_peak_mb": self.memory_peak / (1024 * 1024) if self.memory_peak else None,
+            "memory_start_mb": (
+                self.memory_start / (1024 * 1024) if self.memory_start else None
+            ),
+            "memory_end_mb": (
+                self.memory_end / (1024 * 1024) if self.memory_end else None
+            ),
+            "memory_peak_mb": (
+                self.memory_peak / (1024 * 1024) if self.memory_peak else None
+            ),
             "statistics": self.statistics,
             "thread_stats": self.thread_stats,
         }
@@ -293,7 +300,7 @@ class ProfileReport:
         """Export report as JSON."""
         return json.dumps(self.to_dict(), indent=indent, default=str)
 
-    def save(self, path: Union[str, Path]) -> None:
+    def save(self, path: str | Path) -> None:
         """Save report to JSON file."""
         path = Path(path)
         path.write_text(self.to_json())
@@ -303,7 +310,7 @@ class ProfileReport:
 class Profiler:
     """Advanced profiler for comprehensive performance monitoring."""
 
-    def __init__(self, config: Optional[ProfileConfig] = None):
+    def __init__(self, config: ProfileConfig | None = None):
         """Initialize profiler with configuration."""
         self.config = config or ProfileConfig()
         self.performance_logger = PerformanceLogger(self.config)
@@ -312,31 +319,33 @@ class Profiler:
         self._local = threading.local()
 
         # Global storage
-        self._traces: List[CallInfo] = []
+        self._traces: list[CallInfo] = []
         self._lock = threading.RLock()
         self._active = False
-        self._original_trace = None
+        self._original_trace: Any = None
 
         # Timing
-        self._start_time: Optional[float] = None
-        self._start_cpu_time: Optional[float] = None
+        self._start_time: float | None = None
+        self._start_cpu_time: float | None = None
 
         # Memory tracking
-        self._memory_start: Optional[int] = None
-        self._memory_peak: Optional[int] = None
+        self._memory_start: int | None = None
+        self._memory_peak: int | None = None
 
         # Thread statistics
-        self._thread_stats: Dict[str, Dict] = defaultdict(lambda: {
-            'calls': 0,
-            'total_time': 0,
-            'cpu_time': 0,
-        })
+        self._thread_stats: dict[str, dict] = defaultdict(
+            lambda: {
+                "calls": 0,
+                "total_time": 0,
+                "cpu_time": 0,
+            }
+        )
 
-    def _get_call_stack(self) -> Deque[CallInfo]:
+    def _get_call_stack(self) -> deque[CallInfo]:
         """Get thread-local call stack."""
-        if not hasattr(self._local, 'stack'):
+        if not hasattr(self._local, "stack"):
             self._local.stack = deque()
-        return self._local.stack
+        return self._local.stack  # type: ignore[no-any-return]
 
     def start(self) -> None:
         """Start profiling."""
@@ -355,7 +364,7 @@ class Profiler:
         # Set trace function
         if self.config.trace_calls:
             self._original_trace = sys.gettrace()
-            sys.settrace(self._trace_calls)
+            sys.settrace(self._trace_calls)  # type: ignore[arg-type]
 
         self._active = True
 
@@ -377,24 +386,24 @@ class Profiler:
     def _get_memory_usage(self) -> int:
         """Get current memory usage in bytes."""
         if tracemalloc.is_tracing():
-            return tracemalloc.get_traced_memory()[0]
+            return tracemalloc.get_traced_memory()[0]  # type: ignore[no-any-return]
         elif HAS_PSUTIL:
-            return psutil.Process().memory_info().rss
+            return psutil.Process().memory_info().rss  # type: ignore[no-any-return]
         return 0
 
     def _get_peak_memory(self) -> int:
         """Get peak memory usage in bytes."""
         if tracemalloc.is_tracing():
-            return tracemalloc.get_traced_memory()[1]
+            return tracemalloc.get_traced_memory()[1]  # type: ignore[no-any-return]
         elif HAS_PSUTIL:
-            return psutil.Process().memory_info().rss
+            return psutil.Process().memory_info().rss  # type: ignore[no-any-return]
         return 0
 
     def _get_object_size(self, obj: Any) -> int:
         """Estimate object size in bytes."""
         try:
             return sys.getsizeof(obj)
-        except:
+        except Exception:
             return 0
 
     def _should_trace(self, frame) -> bool:
@@ -408,11 +417,11 @@ class Profiler:
             return False
 
         filename = frame.f_code.co_filename
-        module = frame.f_globals.get('__name__', '')
+        module = frame.f_globals.get("__name__", "")
 
         # Skip built-ins unless included
         if not self.config.include_builtins:
-            if filename.startswith('<') or 'site-packages' in filename:
+            if filename.startswith("<") or "site-packages" in filename:
                 return False
 
         # Apply module filters
@@ -425,9 +434,9 @@ class Profiler:
 
         return True
 
-    def _trace_calls(self, frame, event: str, arg: Any) -> Optional[Callable]:
+    def _trace_calls(self, frame, event: str, arg: Any) -> Callable | None:
         """Trace function for sys.settrace."""
-        if event == 'call':
+        if event == "call":
             if not self._should_trace(frame):
                 return None
 
@@ -438,37 +447,43 @@ class Profiler:
             metrics = PerformanceMetrics(
                 start_time=time.perf_counter(),
                 cpu_time_start=time.process_time(),
-                memory_start=self._get_memory_usage() if self.config.trace_memory else None,
+                memory_start=(
+                    self._get_memory_usage() if self.config.trace_memory else None
+                ),
                 gc_count_start=gc.get_count() if self.config.trace_memory else None,
             )
 
             # Get argument sizes if configured
             if self.config.log_args:
                 try:
-                    metrics.args_size = sum(self._get_object_size(v) for v in frame.f_locals.values())
+                    metrics.args_size = sum(
+                        self._get_object_size(v) for v in frame.f_locals.values()
+                    )
                     metrics.kwargs_size = 0  # Already included in f_locals
-                except:
+                except Exception:
                     pass
 
             # Create call info
             call_info = CallInfo(
                 name=code.co_name,
-                module=frame.f_globals.get('__name__', ''),
+                module=frame.f_globals.get("__name__", ""),
                 qualname=f"{frame.f_globals.get('__name__', '')}.{code.co_name}",
                 file=code.co_filename,
                 line=frame.f_lineno,
                 metrics=metrics,
                 call_depth=len(stack),
                 is_async=asyncio.iscoroutinefunction(frame.f_globals.get(code.co_name)),
-                is_generator=inspect.isgeneratorfunction(frame.f_globals.get(code.co_name)),
-                is_builtin=code.co_filename.startswith('<'),
+                is_generator=inspect.isgeneratorfunction(
+                    frame.f_globals.get(code.co_name)
+                ),
+                is_builtin=code.co_filename.startswith("<"),
             )
 
             # Log call start
             self.performance_logger.log_call_start(
                 call_info,
-                frame.f_locals.get('args', ()),
-                frame.f_locals.get('kwargs', {})
+                frame.f_locals.get("args", ()),
+                frame.f_locals.get("kwargs", {}),
             )
 
             # Add to hierarchy
@@ -484,7 +499,7 @@ class Profiler:
 
             return self._trace_lines if self.config.trace_lines else self._trace_calls
 
-        elif event == 'return':
+        elif event == "return":
             stack = self._get_call_stack()
             if stack:
                 call_info = stack.pop()
@@ -505,14 +520,18 @@ class Profiler:
                 # Update thread statistics
                 thread_name = call_info.metrics.thread_name
                 with self._lock:
-                    self._thread_stats[thread_name]['calls'] += 1
-                    self._thread_stats[thread_name]['total_time'] += call_info.metrics.wall_time
-                    self._thread_stats[thread_name]['cpu_time'] += call_info.metrics.cpu_time
+                    self._thread_stats[thread_name]["calls"] += 1
+                    self._thread_stats[thread_name][
+                        "total_time"
+                    ] += call_info.metrics.wall_time
+                    self._thread_stats[thread_name][
+                        "cpu_time"
+                    ] += call_info.metrics.cpu_time
 
                 # Log call end
                 self.performance_logger.log_call_end(call_info, arg)
 
-        elif event == 'exception':
+        elif event == "exception":
             stack = self._get_call_stack()
             if stack:
                 call_info = stack[-1]
@@ -524,46 +543,52 @@ class Profiler:
 
         return self._trace_calls
 
-    def _trace_lines(self, frame, event: str, arg: Any) -> Optional[Callable]:
+    def _trace_lines(self, frame, event: str, arg: Any) -> Callable | None:
         """Trace function with line tracking."""
-        if event == 'line':
+        if event == "line":
             # Could add line-level tracking here if needed
             return self._trace_lines
         return self._trace_calls(frame, event, arg)
 
     def get_report(self) -> ProfileReport:
         """Generate comprehensive profiling report."""
-        total_duration = time.perf_counter() - self._start_time if self._start_time else 0
-        total_cpu_time = time.process_time() - self._start_cpu_time if self._start_cpu_time else 0
+        total_duration = (
+            time.perf_counter() - self._start_time if self._start_time else 0
+        )
+        total_cpu_time = (
+            time.process_time() - self._start_cpu_time if self._start_cpu_time else 0
+        )
 
         # Calculate statistics
-        statistics = defaultdict(lambda: {
-            'calls': 0,
-            'total_duration': 0,
-            'total_cpu_time': 0,
-            'self_time': 0,
-            'self_cpu_time': 0,
-            'memory_delta': 0,
-            'exceptions': 0,
-            'min_duration': float('inf'),
-            'max_duration': 0,
-        })
+        statistics: dict[str, dict[str, float]] = defaultdict(
+            lambda: {
+                "calls": 0,
+                "total_duration": 0,
+                "total_cpu_time": 0,
+                "self_time": 0,
+                "self_cpu_time": 0,
+                "memory_delta": 0,
+                "exceptions": 0,
+                "min_duration": float("inf"),
+                "max_duration": 0,
+            }
+        )
 
         def process_call(call: CallInfo):
             key = call.qualname
             stats = statistics[key]
 
-            stats['calls'] += 1
-            stats['total_duration'] += call.metrics.wall_time
-            stats['total_cpu_time'] += call.metrics.cpu_time
-            stats['self_time'] += call.self_time
-            stats['self_cpu_time'] += call.self_cpu_time
-            stats['memory_delta'] += call.metrics.memory_delta
-            stats['min_duration'] = min(stats['min_duration'], call.metrics.wall_time)
-            stats['max_duration'] = max(stats['max_duration'], call.metrics.wall_time)
+            stats["calls"] += 1
+            stats["total_duration"] += call.metrics.wall_time
+            stats["total_cpu_time"] += call.metrics.cpu_time
+            stats["self_time"] += call.self_time
+            stats["self_cpu_time"] += call.self_cpu_time
+            stats["memory_delta"] += call.metrics.memory_delta
+            stats["min_duration"] = min(stats["min_duration"], call.metrics.wall_time)
+            stats["max_duration"] = max(stats["max_duration"], call.metrics.wall_time)
 
             if call.metrics.exception:
-                stats['exceptions'] += 1
+                stats["exceptions"] += 1
 
             for child in call.children:
                 process_call(child)
@@ -574,17 +599,18 @@ class Profiler:
 
         # Clean up statistics
         for stats in statistics.values():
-            if stats['min_duration'] == float('inf'):
-                stats['min_duration'] = 0
+            if stats["min_duration"] == float("inf"):
+                stats["min_duration"] = 0
 
         # Filter by min_duration
         if self.config.min_duration > 0:
-            statistics = {
-                k: v for k, v in statistics.items()
-                if v['total_duration'] >= self.config.min_duration
-            }
+            statistics = dict({
+                k: v
+                for k, v in statistics.items()
+                if v["total_duration"] >= self.config.min_duration
+            })
 
-        total_calls = sum(stats['calls'] for stats in statistics.values())
+        total_calls = int(sum(stats["calls"] for stats in statistics.values()))
         unique_functions = len(statistics)
 
         memory_end = self._get_memory_usage() if self.config.trace_memory else None
@@ -618,7 +644,7 @@ class Profiler:
 
 
 def profile(
-    func: Optional[Callable] = None,
+    func: Callable | None = None,
     *,
     trace_memory: bool = True,
     trace_calls: bool = True,
@@ -626,13 +652,13 @@ def profile(
     max_depth: int = 100,
     min_duration: float = 0.0,
     include_builtins: bool = False,
-    include_modules: Optional[Set[str]] = None,
-    exclude_modules: Optional[Set[str]] = None,
+    include_modules: set[str] | None = None,
+    exclude_modules: set[str] | None = None,
     log_level: str = "INFO",
     log_calls: bool = True,
     log_args: bool = True,
     detailed_tracing: bool = False,
-    report_path: Optional[Union[str, Path]] = None,
+    report_path: str | Path | None = None,
     enabled: bool = True,
 ) -> Callable:
     """
@@ -663,6 +689,7 @@ def profile(
             # Your code here
             return result
     """
+
     def decorator(func: Callable) -> Callable:
         if not enabled:
             return func
@@ -688,6 +715,7 @@ def profile(
         )
 
         if asyncio.iscoroutinefunction(func):
+
             @functools.wraps(func)
             async def async_wrapper(*args, **kwargs):
 
@@ -712,9 +740,9 @@ def profile(
 
             return async_wrapper
         else:
+
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
-
 
                 profiler = Profiler(config)
                 profiler.start()

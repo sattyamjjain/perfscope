@@ -461,7 +461,9 @@ class Profiler:
                     )
                     metrics.kwargs_size = 0  # Already included in f_locals
                 except Exception:
-                    pass
+                    # Set defaults if object size calculation fails (e.g., unpicklable objects)
+                    metrics.args_size = 0
+                    metrics.kwargs_size = 0
 
             # Create call info
             call_info = CallInfo(

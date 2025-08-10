@@ -77,7 +77,7 @@ jobs:
     
     - name: Check dependencies for security issues
       run: |
-        safety scan --save-json safety-report.json
+        safety check --save-json safety-report.json
 
   build:
     name: Build Distribution

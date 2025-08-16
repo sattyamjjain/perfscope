@@ -1,5 +1,5 @@
 name: 🐛 Bug Report
-description: File a bug report to help us improve PyCallMeter
+description: File a bug report to help us improve PerfScope
 title: "[BUG]: "
 labels: ["bug", "triage"]
 assignees: []
@@ -19,14 +19,14 @@ body:
           required: true
         - label: I have read the documentation
           required: true
-        - label: I am using the latest version of PyCallMeter
+        - label: I am using the latest version of PerfScope
           required: true
 
   - type: input
     id: version
     attributes:
-      label: PyCallMeter version
-      description: What version of PyCallMeter are you using?
+      label: PerfScope version
+      description: What version of PerfScope are you using?
       placeholder: "1.0.0"
     validations:
       required: true
@@ -38,7 +38,7 @@ body:
       description: What version of Python are you using?
       options:
         - "3.8"
-        - "3.9" 
+        - "3.9"
         - "3.10"
         - "3.11"
         - "3.12"
@@ -82,8 +82,8 @@ body:
       description: Please provide a minimal code example that reproduces the issue
       placeholder: |
         ```python
-        from pycallmeter import profile
-        
+        from perfscope import profile
+
         @profile()
         def example_function():
             # Your code here

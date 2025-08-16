@@ -1,5 +1,5 @@
 name: 🚀 Feature Request
-description: Suggest an idea for PyCallMeter
+description: Suggest an idea for PerfScope
 title: "[FEATURE]: "
 labels: ["enhancement", "triage"]
 assignees: []
@@ -19,7 +19,7 @@ body:
           required: true
         - label: I have read the documentation
           required: true
-        - label: This feature would be useful for the broader PyCallMeter community
+        - label: This feature would be useful for the broader PerfScope community
           required: true
 
   - type: textarea
@@ -72,7 +72,7 @@ body:
       description: How important is this feature to you?
       options:
         - Low
-        - Medium  
+        - Medium
         - High
         - Critical
     validations:
@@ -101,7 +101,7 @@ body:
         - API design suggestions
         - Code examples
         - Technical considerations
-        
+
   - type: textarea
     id: context
     attributes:

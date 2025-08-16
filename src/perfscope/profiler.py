@@ -1,4 +1,4 @@
-"""Main profiler implementation for PyCallMeter - Performance monitoring with detailed logging."""
+"""Main profiler implementation for PerfScope - Performance monitoring with detailed logging."""
 
 from __future__ import annotations
 
@@ -24,15 +24,15 @@ try:
 except ImportError:
     HAS_PSUTIL = False
 
-from pycallmeter.config import ProfileConfig
+from perfscope.config import ProfileConfig
 
-# Configure PyCallMeter logging
-logger = logging.getLogger("pycallmeter")
+# Configure PerfScope logging
+logger = logging.getLogger("perfscope")
 if not logger.handlers:
     handler = logging.StreamHandler()
     handler.setFormatter(
         logging.Formatter(
-            "%(asctime)s.%(msecs)03d | %(levelname)-8s | [PyCallMeter] %(message)s",
+            "%(asctime)s.%(msecs)03d | %(levelname)-8s | [PerfScope] %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
     )
@@ -451,8 +451,8 @@ class Profiler:
             if not any(module.startswith(m) for m in self.config.include_modules):
                 return False
 
-        # CRITICAL: Always exclude pycallmeter itself to prevent infinite recursion
-        if module.startswith("pycallmeter"):
+        # CRITICAL: Always exclude perfscope itself to prevent infinite recursion
+        if module.startswith("perfscope"):
             return False
 
         # Also exclude logging to prevent excessive noise

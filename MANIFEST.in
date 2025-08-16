@@ -1,10 +1,9 @@
-# Include the README and license files
+# Include the README and config files
 include README.md
-include LICENSE
 include pyproject.toml
 
 # Include type information
-include src/pycallmeter/py.typed
+include src/perfscope/py.typed
 
 # Include documentation
 recursive-include docs *

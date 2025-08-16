@@ -1,6 +1,6 @@
-# Contributing to PyCallMeter
+# Contributing to PerfScope
 
-🎉 First off, thank you for considering contributing to PyCallMeter! It's people like you who make PyCallMeter such a great tool for the Python community.
+🎉 First off, thank you for considering contributing to PerfScope! It's people like you who make PerfScope such a great tool for the Python community.
 
 ## 🚀 Quick Start
 
@@ -8,8 +8,8 @@
 
 1. **Fork and clone the repository**
    ```bash
-   git clone https://github.com/yourusername/pycallmeter.git
-   cd pycallmeter
+   git clone https://github.com/yourusername/perfscope.git
+   cd perfscope
    ```
 
 2. **Set up development environment**
@@ -17,7 +17,7 @@
    # Create virtual environment
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   
+
    # Install development dependencies
    pip install -e ".[dev]"
    ```
@@ -26,13 +26,13 @@
    ```bash
    # Run tests
    pytest tests/ -v
-   
+
    # Run type checking
    mypy src/
-   
+
    # Run linting
    ruff check src/ tests/
-   
+
    # Check formatting
    black --check src/ tests/
    ```
@@ -46,7 +46,7 @@ Found a bug? Please help us fix it!
 1. **Check existing issues** first to avoid duplicates
 2. **Use our bug report template** when creating new issues
 3. **Include minimal reproduction code** that demonstrates the issue
-4. **Provide system information** (Python version, OS, PyCallMeter version)
+4. **Provide system information** (Python version, OS, PerfScope version)
 5. **Include relevant logs** with the issue
 
 ### ✨ Feature Requests
@@ -79,7 +79,7 @@ Ready to write some code? Here's how:
 We use automated tools to maintain consistent code style:
 
 - **Black** for code formatting
-- **Ruff** for linting and import sorting  
+- **Ruff** for linting and import sorting
 - **mypy** for static type checking
 
 ```bash
@@ -102,7 +102,7 @@ We maintain high test coverage (>95%) and use comprehensive testing:
 pytest tests/ -v
 
 # Run with coverage
-pytest tests/ --cov=src/pycallmeter --cov-report=html
+pytest tests/ --cov=src/perfscope --cov-report=html
 
 # Run specific test categories
 pytest tests/ -k "test_profiler"
@@ -121,7 +121,7 @@ All code must include comprehensive type hints:
 from typing import Optional, Dict, Any, Callable
 
 def example_function(
-    name: str, 
+    name: str,
     config: Optional[Dict[str, Any]] = None
 ) -> Callable[..., Any]:
     """Example function with proper type hints."""
@@ -140,15 +140,15 @@ def profile_function(
     max_depth: int = 100
 ) -> Callable[..., Any]:
     """Profile a function with comprehensive performance monitoring.
-    
+
     Args:
         func: The function to profile
         trace_memory: Whether to track memory usage
         max_depth: Maximum call stack depth to trace
-        
+
     Returns:
         The profiled function with performance tracking
-        
+
     Example:
         >>> @profile_function(trace_memory=True)
         >>> def my_function():
@@ -207,7 +207,7 @@ git add .
 git commit -m "feat: add memory leak detection capabilities"
 # or
 git commit -m "fix: resolve duplicate logging in async functions"
-# or  
+# or
 git commit -m "docs: improve FastAPI integration examples"
 ```
 
@@ -312,7 +312,7 @@ We follow [Semantic Versioning](https://semver.org/):
 ### Release Schedule
 
 - **Major releases**: Every 6-12 months
-- **Minor releases**: Every 2-3 months  
+- **Minor releases**: Every 2-3 months
 - **Patch releases**: As needed for critical fixes
 
 ## 💬 Community
@@ -321,7 +321,7 @@ We follow [Semantic Versioning](https://semver.org/):
 
 - **GitHub Discussions**: For questions and general discussion
 - **GitHub Issues**: For bug reports and feature requests
-- **Stack Overflow**: Tag questions with `pycallmeter`
+- **Stack Overflow**: Tag questions with `perfscope`
 
 ### Code of Conduct
 
@@ -338,10 +338,10 @@ Contributors are recognized in:
 
 ### Useful Links
 
-- **Project Repository**: https://github.com/sattyamjain/pycallmeter
-- **Issue Tracker**: https://github.com/sattyamjain/pycallmeter/issues
-- **PyPI Package**: https://pypi.org/project/pycallmeter/
-- **Documentation**: https://github.com/sattyamjain/pycallmeter#readme
+- **Project Repository**: https://github.com/sattyamjain/perfscope
+- **Issue Tracker**: https://github.com/sattyamjain/perfscope/issues
+- **PyPI Package**: https://pypi.org/project/perfscope/
+- **Documentation**: https://github.com/sattyamjain/perfscope#readme
 
 ### Learning Resources
 
@@ -354,6 +354,6 @@ Contributors are recognized in:
 
 ## 🙏 Thank You!
 
-Your contributions help make PyCallMeter better for everyone. Whether you're fixing a typo, adding a feature, or reporting a bug, every contribution is valuable and appreciated!
+Your contributions help make PerfScope better for everyone. Whether you're fixing a typo, adding a feature, or reporting a bug, every contribution is valuable and appreciated!
 
 **Happy coding!** 🎉

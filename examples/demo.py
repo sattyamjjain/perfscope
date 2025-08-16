@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 """
-PyCallMeter v1.0.0 - Comprehensive Demo
+PerfScope v1.0.0 - Comprehensive Demo
 Shows various profiling scenarios and capabilities.
 """
 
 import asyncio
-import time
 import random
+import time
 from concurrent.futures import ThreadPoolExecutor
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
-from pycallmeter import profile
-
+from perfscope import profile
 
 # ============================================================================
 # BASIC EXAMPLES
@@ -107,7 +106,7 @@ async def async_io_operation(delay: float = 0.1) -> str:
 async def parallel_async_tasks(n: int = 5) -> List[str]:
     """Execute multiple async tasks in parallel."""
     tasks = []
-    for i in range(n):
+    for _i in range(n):
         delay = random.uniform(0.01, 0.1)
         task = async_io_operation(delay)
         tasks.append(task)
@@ -150,7 +149,7 @@ async def complex_async_workflow(user_id: int, session_id: str) -> Dict[str, Any
             "processed_at": time.time(),
         }
         # Simulate heavy computation
-        for i in range(1000):
+        for _i in range(1000):
             result["hash"] = hash(str(result))
         return result
 
@@ -240,7 +239,7 @@ def function_with_errors(should_fail: bool = False, retry_count: int = 3) -> str
             time.sleep(0.01)
             return f"Success on attempt {attempt + 1}"
 
-        except ValueError as e:
+        except ValueError:
             if attempt == retry_count - 1:
                 raise
             time.sleep(0.01 * (2**attempt))  # Exponential backoff
@@ -348,9 +347,7 @@ async def run_async_examples():
     result = await complex_async_workflow(123, "session_456")
     if result.get("success"):
         print(f"   Success! Processed user {result['user']['name']}")
-    print(
-        f"   CPU efficiency: {complex_async_workflow.profile_report.cpu_efficiency:.1%}"
-    )
+    print(f"   CPU efficiency: {complex_async_workflow.profile_report.cpu_efficiency:.1%}")
 
 
 def run_threading_examples():
@@ -409,7 +406,7 @@ def run_class_examples():
 def print_summary():
     """Print demo summary."""
     print("\n" + "=" * 80)
-    print("PYCALLMETER DEMO COMPLETE")
+    print("PERFSCOPE DEMO COMPLETE")
     print("=" * 80)
     print(
         """
@@ -436,7 +433,7 @@ For more details, check the profile_report attribute on any profiled function:
 def main():
     """Run all demo examples."""
     print("\n" + "=" * 80)
-    print("PYCALLMETER v1.0.0 - COMPREHENSIVE DEMO")
+    print("PERFSCOPE v1.0.0 - COMPREHENSIVE DEMO")
     print("=" * 80)
 
     # Run examples

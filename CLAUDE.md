@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PyCallMeter is a Python performance profiler and APM (Application Performance Monitoring) tool that provides real-time insights into function execution time, memory consumption, call hierarchies, and bottleneck detection. The package is designed for production use with minimal overhead and zero runtime dependencies.
+PerfScope is a Python performance profiler and APM (Application Performance Monitoring) tool that provides real-time insights into function execution time, memory consumption, call hierarchies, and bottleneck detection. The package is designed for production use with minimal overhead and zero runtime dependencies.
 
 ## Development Commands
 
@@ -26,7 +26,7 @@ pytest
 # Run tests with coverage report
 make test-cov
 # Or with pytest
-pytest --cov=pycallmeter --cov-report=term-missing --cov-report=html
+pytest --cov=perfscope --cov-report=term-missing --cov-report=html
 
 # Run a single test file
 pytest tests/test_profiler.py -v
@@ -50,11 +50,14 @@ ruff check src tests
 # Type checking
 make typecheck
 # Or with mypy directly
-mypy src/pycallmeter
+mypy src/perfscope
 
 # Security scanning
 bandit -r src/ -f json -o bandit-report.json
 safety check
+
+# Pre-commit hooks (installed with make install-dev)
+pre-commit run --all-files
 ```
 
 ### Building & Distribution
@@ -79,7 +82,7 @@ make clean
 ## Code Architecture
 
 ### Package Structure
-- **src/pycallmeter/** - Main package directory
+- **src/perfscope/** - Main package directory
   - `__init__.py` - Package initialization, exports main API (`profile`, `Profiler`, `ProfileConfig`)
   - `config.py` - Configuration dataclass (`ProfileConfig`) for controlling profiling behavior
   - `profiler.py` - Core profiler implementation with `Profiler` class, `profile` decorator, and performance tracking logic
@@ -119,7 +122,8 @@ make clean
 
 - **Core**: Zero runtime dependencies (pure Python)
 - **Optional**: `psutil` for enhanced memory tracking (installed with `[full]` extra)
-- **Development**: pytest, ruff, black, mypy, bandit, safety (installed with `[dev]` extra)
+- **Development**: pytest, ruff, mypy, bandit, safety, pre-commit (installed with `[dev]` extra)
+- **Web/Science**: Optional extras available for `[web]`, `[science]`, `[all]`
 
 ## Testing Approach
 
@@ -139,8 +143,10 @@ Run tests with visible output using `pytest -v -s` to see profiling logs during 
 - The profiler uses Python's `sys.settrace()` for call tracking, which has performance implications
 - Memory tracking requires `tracemalloc` to be started, handled automatically when `trace_memory=True`
 - HTML reports are generated using inline CSS/JavaScript for portability
-- Logging uses a dedicated "pycallmeter" logger with `[PyCallMeter]` prefix for easy filtering
+- Logging uses a dedicated "perfscope" logger with `[PerfScope]` prefix for easy filtering
 - The package is typed and includes `py.typed` marker for mypy support
-- **CRITICAL**: The profiler always excludes `pycallmeter` and `logging` modules to prevent infinite recursion
+- **CRITICAL**: The profiler always excludes `perfscope` and `logging` modules to prevent infinite recursion
 - Resource cleanup is handled properly in `stop()` method and decorator finally blocks
 - Thread-local storage is used for managing per-thread call stacks
+- CI/CD pipeline runs tests on Python 3.8-3.12 across Linux, Windows, and macOS
+- All code must pass ruff linting, mypy type checking, and security scans before merge

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to PyCallMeter will be documented in this file.
+All notable changes to PerfScope will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Production-ready logging with [PyCallMeter] identifiers
+- Production-ready logging with [PerfScope] identifiers
 - Smart threshold-based function logging (>0.1ms by default)
 - Enhanced HTML report generation with interactive call trees
 - Memory leak detection and analysis capabilities
@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2024-01-15
 
 ### Added
-- Initial release of PyCallMeter
+- Initial release of PerfScope
 - Core profiling functionality with function call tracing
 - Memory usage monitoring and tracking
 - Async/await support for modern Python applications
@@ -55,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Production-ready logging format
   - Framework compatibility (Django, Flask, FastAPI)
 
-- **Advanced Analytics** 
+- **Advanced Analytics**
   - Interactive call tree visualization
   - Memory leak detection capabilities
   - Async/concurrent profiling support
@@ -91,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### What's New in v1.0.0
 
-PyCallMeter v1.0.0 introduces a revolutionary approach to Python performance profiling:
+PerfScope v1.0.0 introduces a revolutionary approach to Python performance profiling:
 
 🎯 **Zero Configuration Profiling**: Just add `@profile()` to any function and get instant performance insights.
 
@@ -99,7 +99,7 @@ PyCallMeter v1.0.0 introduces a revolutionary approach to Python performance pro
 
 🔍 **Deep Insights**: Get comprehensive performance analytics including:
 - Function execution times (wall-clock and CPU)
-- Memory usage and leak detection  
+- Memory usage and leak detection
 - Call tree visualization
 - Bottleneck identification
 - Statistical analysis
@@ -113,7 +113,7 @@ PyCallMeter v1.0.0 introduces a revolutionary approach to Python performance pro
 
 📊 **Rich Reporting**: Export detailed reports in multiple formats:
 - Interactive HTML with call trees
-- JSON for programmatic analysis  
+- JSON for programmatic analysis
 - CSV for spreadsheet analysis
 - Console output for development
 
@@ -122,11 +122,11 @@ PyCallMeter v1.0.0 introduces a revolutionary approach to Python performance pro
 This is the initial release, so no migration is needed. Simply install and start profiling:
 
 ```bash
-pip install pycallmeter
+pip install perfscope
 ```
 
 ```python
-from pycallmeter import profile
+from perfscope import profile
 
 @profile()
 def your_function():
@@ -156,11 +156,11 @@ Special thanks to all contributors who made this release possible:
 
 ### Community
 
-- **GitHub**: https://github.com/sattyamjain/pycallmeter
-- **Issues**: https://github.com/sattyamjain/pycallmeter/issues
-- **Discussions**: https://github.com/sattyamjain/pycallmeter/discussions
-- **PyPI**: https://pypi.org/project/pycallmeter/
+- **GitHub**: https://github.com/sattyamjain/perfscope
+- **Issues**: https://github.com/sattyamjain/perfscope/issues
+- **Discussions**: https://github.com/sattyamjain/perfscope/discussions
+- **PyPI**: https://pypi.org/project/perfscope/
 
 ---
 
-*For more information about PyCallMeter, visit our [GitHub repository](https://github.com/sattyamjain/pycallmeter) or check out our [comprehensive documentation](https://github.com/sattyamjain/pycallmeter#readme).*
+*For more information about PerfScope, visit our [GitHub repository](https://github.com/sattyamjain/perfscope) or check out our [comprehensive documentation](https://github.com/sattyamjain/perfscope#readme).*

@@ -25,7 +25,7 @@ test:
 	pytest
 
 test-cov:
-	pytest --cov=pycallmeter --cov-report=term-missing --cov-report=html
+	pytest --cov=perfscope --cov-report=term-missing --cov-report=html
 
 lint:
 	ruff check src tests
@@ -34,7 +34,7 @@ format:
 	ruff format src tests
 
 typecheck:
-	mypy src/pycallmeter
+	mypy src/perfscope
 
 clean:
 	rm -rf build dist *.egg-info

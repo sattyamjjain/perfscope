@@ -1,22 +1,22 @@
-# PyCallMeter 🚀
+# PerfScope 🚀
 
 > **The Ultimate Python Performance Profiler** - Production-Ready Performance Monitoring, Memory Tracking & Call Tree Analysis
 
-[![PyPI version](https://badge.fury.io/py/pycallmeter.svg)](https://badge.fury.io/py/pycallmeter)
-[![Python Versions](https://img.shields.io/pypi/pyversions/pycallmeter.svg)](https://pypi.org/project/pycallmeter/)
-[![Downloads](https://pepy.tech/badge/pycallmeter)](https://pepy.tech/project/pycallmeter)
-[![GitHub stars](https://img.shields.io/github/stars/sattyamjain/pycallmeter.svg?style=social&label=Star)](https://github.com/sattyamjain/pycallmeter)
+[![PyPI version](https://badge.fury.io/py/perfscope.svg)](https://badge.fury.io/py/perfscope)
+[![Python Versions](https://img.shields.io/pypi/pyversions/perfscope.svg)](https://pypi.org/project/perfscope/)
+[![Downloads](https://pepy.tech/badge/perfscope)](https://pepy.tech/project/perfscope)
+[![GitHub stars](https://img.shields.io/github/stars/sattyamjain/perfscope.svg?style=social&label=Star)](https://github.com/sattyamjain/perfscope)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code Quality](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Type Checked](https://img.shields.io/badge/type%20checked-mypy-blue)](https://mypy.readthedocs.io/)
 [![Tests](https://img.shields.io/badge/tests-pytest-green)](https://pytest.org/)
 
-**PyCallMeter** is the most advanced **Python performance profiler** and **application performance monitoring (APM)** tool. Get **real-time insights** into function execution time, memory consumption, call hierarchies, and bottleneck detection with **zero configuration**. Perfect for **Django**, **Flask**, **FastAPI**, **async applications**, **data science**, and **machine learning** performance optimization.
+**PerfScope** is the most advanced **Python performance profiler** and **application performance monitoring (APM)** tool. Get **real-time insights** into function execution time, memory consumption, call hierarchies, and bottleneck detection with **zero configuration**. Perfect for **Django**, **Flask**, **FastAPI**, **async applications**, **data science**, and **machine learning** performance optimization.
 
-## 🎯 Why Choose PyCallMeter?
+## 🎯 Why Choose PerfScope?
 
 - **🎨 Production-Ready Logging** - Clean, structured logs without emojis for enterprise environments
-- **📊 Advanced Performance Analytics** - CPU time, wall time, memory usage, call frequency analysis  
+- **📊 Advanced Performance Analytics** - CPU time, wall time, memory usage, call frequency analysis
 - **🔄 Async/Await Support** - Full compatibility with modern Python async frameworks
 - **🌳 Interactive Call Trees** - Visual representation of function call hierarchies
 - **💾 Memory Leak Detection** - Track memory allocations and identify memory leaks
@@ -36,7 +36,7 @@
 
 ### 🎯 **Developer Experience**
 - **Single Decorator Setup** - Add `@profile()` to any function for instant profiling
-- **Production-Ready Logs** - Clean, structured logging format with [PyCallMeter] identifiers
+- **Production-Ready Logs** - Clean, structured logging format with [PerfScope] identifiers
 - **Zero Configuration** - Works out-of-the-box with sensible defaults
 - **IDE Integration** - Type hints and IntelliSense support for all APIs
 - **Framework Compatibility** - Works with Django, Flask, FastAPI, Celery, and all Python frameworks
@@ -60,13 +60,13 @@
 ### Quick Install
 ```bash
 # Standard installation - pure Python, zero dependencies
-pip install pycallmeter
+pip install perfscope
 
 # Full installation with enhanced memory tracking
-pip install pycallmeter[full]
+pip install perfscope[full]
 
 # Development installation with all tools
-pip install pycallmeter[dev]
+pip install perfscope[dev]
 ```
 
 ### Requirements
@@ -81,7 +81,7 @@ pip install pycallmeter[dev]
 Transform any function into a performance monitoring powerhouse with a single decorator:
 
 ```python
-from pycallmeter import profile
+from perfscope import profile
 
 # Basic profiling - just add the decorator!
 @profile()
@@ -94,9 +94,9 @@ def calculate_fibonacci(n):
 # Run your function normally
 result = calculate_fibonacci(10)
 
-# PyCallMeter automatically logs:
-# 2024-01-15 10:30:45.123 | INFO | [PyCallMeter] PROFILED[calculate_fibonacci] time=5.23ms cpu=5.20ms efficiency=99.4% nested=177
-# 2024-01-15 10:30:45.125 | INFO | [PyCallMeter] SESSION SUMMARY duration=0.005s cpu=0.005s efficiency=99.4% calls=177 functions=1
+# PerfScope automatically logs:
+# 2024-01-15 10:30:45.123 | INFO | [PerfScope] PROFILED[calculate_fibonacci] time=5.23ms cpu=5.20ms efficiency=99.4% nested=177
+# 2024-01-15 10:30:45.125 | INFO | [PerfScope] SESSION SUMMARY duration=0.005s cpu=0.005s efficiency=99.4% calls=177 functions=1
 ```
 
 ### Export Detailed Reports
@@ -107,7 +107,7 @@ result = calculate_fibonacci(10)
 def process_large_dataset(data):
     """Process large datasets with memory tracking"""
     cleaned_data = clean_data(data)           # Tracked
-    features = extract_features(cleaned_data) # Tracked  
+    features = extract_features(cleaned_data) # Tracked
     model_result = train_model(features)      # Tracked
     return model_result
 
@@ -122,7 +122,7 @@ def process_large_dataset(data):
 
 ```python
 import asyncio
-from pycallmeter import profile
+from perfscope import profile
 
 # Profile async functions with memory tracking
 @profile(trace_memory=True, detailed_tracing=True)
@@ -135,7 +135,7 @@ async def fetch_multiple_apis(urls):
 
 # Automatically tracks:
 # - Async function execution times
-# - Memory allocations during concurrent operations  
+# - Memory allocations during concurrent operations
 # - Call tree of async tasks
 # - Exception handling performance
 ```
@@ -147,7 +147,7 @@ async def fetch_multiple_apis(urls):
 Profile a complete web request lifecycle in production:
 
 ```python
-from pycallmeter import profile
+from perfscope import profile
 from fastapi import FastAPI, Request
 import asyncio
 
@@ -163,41 +163,41 @@ app = FastAPI()
 @app.post("/api/process-order")
 async def process_order_endpoint(request: OrderRequest):
     """Complete order processing with performance monitoring"""
-    
+
     # Input validation (tracked)
     validation_result = await validate_order_request(request)
     if not validation_result.is_valid:
         return error_response(validation_result.errors)
-    
+
     # Parallel data fetching (tracked)
     customer_data, inventory_data, pricing_data = await asyncio.gather(
         fetch_customer_profile(request.customer_id),     # Database query
         check_inventory_availability(request.items),     # Redis cache + DB
         calculate_dynamic_pricing(request.items)         # External API
     )
-    
-    # Business logic processing (tracked) 
+
+    # Business logic processing (tracked)
     order_calculation = await process_order_logic(
         customer_data, inventory_data, pricing_data
     )
-    
+
     # Payment processing (tracked)
     payment_result = await process_payment(
         order_calculation.total_amount,
         customer_data.payment_method
     )
-    
+
     # Database transaction (tracked)
     final_order = await save_order_transaction(
         order_calculation, payment_result
     )
-    
+
     return success_response(final_order)
 
 # Production logs show:
-# [PyCallMeter] PROFILED[process_order_endpoint] time=245.67ms cpu=89.23ms efficiency=36.3% mem=+2.4MB nested=23
-# [PyCallMeter] BOTTLENECK[fetch_customer_profile] 34.2% runtime (84.1ms)
-# [PyCallMeter] SESSION SUMMARY duration=0.246s cpu=0.089s efficiency=36.3% calls=47 functions=18
+# [PerfScope] PROFILED[process_order_endpoint] time=245.67ms cpu=89.23ms efficiency=36.3% mem=+2.4MB nested=23
+# [PerfScope] BOTTLENECK[fetch_customer_profile] 34.2% runtime (84.1ms)
+# [PerfScope] SESSION SUMMARY duration=0.246s cpu=0.089s efficiency=36.3% calls=47 functions=18
 ```
 
 ### Machine Learning Pipeline
@@ -210,27 +210,27 @@ async def process_order_endpoint(request: OrderRequest):
 )
 def train_recommendation_model(user_data, item_features):
     """Complete ML pipeline with performance tracking"""
-    
+
     # Data preprocessing (memory intensive)
     processed_features = preprocess_features(user_data, item_features)
-    
+
     # Feature engineering (CPU intensive)
     engineered_features = create_interaction_features(processed_features)
-    
+
     # Model training (GPU/CPU intensive)
     model = train_collaborative_filtering_model(engineered_features)
-    
+
     # Model validation (I/O intensive)
     validation_metrics = validate_model_performance(model, test_data)
-    
+
     # Model persistence (I/O intensive)
     save_trained_model(model, "recommendation_model_v2.pkl")
-    
+
     return ModelTrainingResult(model, validation_metrics)
 
 # Identifies bottlenecks in your ML pipeline:
 # - Which preprocessing steps are slowest
-# - Memory usage during feature engineering  
+# - Memory usage during feature engineering
 # - Training time breakdown by algorithm phase
 # - I/O performance for model persistence
 ```
@@ -240,25 +240,25 @@ def train_recommendation_model(user_data, item_features):
 ```python
 # views.py
 from django.http import JsonResponse
-from pycallmeter import profile
+from perfscope import profile
 
 @profile(trace_memory=True)
 def api_user_dashboard(request):
     """Django view with comprehensive profiling"""
     user = request.user
-    
+
     # Database queries (tracked)
     user_profile = UserProfile.objects.select_related('company').get(user=user)
     recent_orders = Order.objects.filter(user=user)[:10]
     analytics_data = generate_user_analytics(user.id)
-    
+
     # Template rendering (tracked)
     context = {
         'user': user_profile,
-        'orders': recent_orders, 
+        'orders': recent_orders,
         'analytics': analytics_data
     }
-    
+
     return JsonResponse(context)
 
 # Automatically tracks:
@@ -270,7 +270,7 @@ def api_user_dashboard(request):
 
 ## 📊 Understanding Performance Reports
 
-PyCallMeter generates comprehensive reports with multiple visualization formats:
+PerfScope generates comprehensive reports with multiple visualization formats:
 
 ### 📈 Interactive Call Tree (HTML Report)
 ```
@@ -294,12 +294,12 @@ process_order_endpoint (245.67ms, self: 12.4ms)                    [Memory: +2.4
 
 **⏱️ Execution Summary**
 - **Total Duration**: 245.67ms (wall-clock time)
-- **CPU Time**: 89.23ms (36.3% CPU efficiency) 
+- **CPU Time**: 89.23ms (36.3% CPU efficiency)
 - **Total Function Calls**: 47
 - **Unique Functions**: 18
 - **Call Tree Depth**: 4 levels
 
-**💾 Memory Analysis** 
+**💾 Memory Analysis**
 - **Peak Memory**: 125.4MB
 - **Memory Delta**: +2.4MB
 - **Memory Efficiency**: 98.1%
@@ -328,24 +328,24 @@ process_order_endpoint (245.67ms, self: 12.4ms)                    [Memory: +2.4
     # === TRACING CONTROL ===
     enabled=True,                    # Master switch for profiling
     trace_calls=True,               # Function call hierarchy tracking
-    trace_memory=True,              # Memory allocation monitoring  
+    trace_memory=True,              # Memory allocation monitoring
     trace_lines=False,              # Line-by-line execution (high overhead)
-    
+
     # === PERFORMANCE OPTIMIZATION ===
     max_depth=100,                  # Maximum call stack depth
     min_duration=0.001,             # Only log functions > 1ms (0.001s)
-    
+
     # === FILTERING & FOCUS ===
     include_modules={"myapp", "business_logic"},  # Whitelist modules
-    exclude_modules={"logging", "urllib3"},       # Blacklist noisy modules  
+    exclude_modules={"logging", "urllib3"},       # Blacklist noisy modules
     include_builtins=False,         # Skip Python built-in functions
-    
+
     # === LOGGING CONFIGURATION ===
     log_calls=True,                 # Enable function call logging
     log_args=True,                  # Log argument sizes
     log_level="INFO",               # DEBUG|INFO|WARNING|ERROR
     detailed_tracing=False,         # Verbose debug logs vs clean production logs
-    
+
     # === REPORT GENERATION ===
     report_path="performance_analysis.html",  # Auto-save detailed report
     auto_report=True,               # Generate report after execution
@@ -369,7 +369,7 @@ def your_function():
 )
 ```
 
-#### Development & Debugging Setup  
+#### Development & Debugging Setup
 ```python
 # Maximum visibility for debugging
 @profile(
@@ -400,7 +400,7 @@ def your_function():
 ### 🔧 Manual Profiling API
 
 ```python
-from pycallmeter import Profiler, ProfileConfig
+from perfscope import Profiler, ProfileConfig
 
 # Create custom configuration
 config = ProfileConfig(
@@ -467,13 +467,13 @@ print("\n📈 Function Performance Analysis:")
 for func_name, stats in report.statistics.items():
     avg_time = stats['total_duration'] / stats['calls'] * 1000  # ms
     memory_mb = stats['memory_delta'] / (1024 * 1024)
-    
+
     print(f"  {func_name}:")
     print(f"    Calls: {stats['calls']}")
     print(f"    Total: {stats['total_duration']:.3f}s")
     print(f"    Average: {avg_time:.2f}ms")
     print(f"    Memory: {memory_mb:+.2f}MB")
-    
+
 # === IDENTIFY BOTTLENECKS ===
 bottlenecks = [
     (name, stats) for name, stats in report.statistics.items()
@@ -496,7 +496,7 @@ with open("performance_data.json", "w") as f:
 
 ```python
 import gc
-from pycallmeter import profile
+from perfscope import profile
 
 @profile(
     trace_memory=True,
@@ -506,10 +506,10 @@ from pycallmeter import profile
 )
 def detect_memory_leaks():
     """Function that demonstrates memory leak detection"""
-    
+
     # Potential memory leak: growing list never cleared
     global_cache = []
-    
+
     def process_batch(batch_size=10000):
         """Process data batch - potential leak here"""
         batch_data = []
@@ -522,16 +522,16 @@ def detect_memory_leaks():
             }
             batch_data.append(item)
             global_cache.append(item)  # ⚠️ MEMORY LEAK: Never cleared!
-        
+
         # Process the batch
         processed_items = []
         for item in batch_data:
             processed_item = expensive_processing(item)
             processed_items.append(processed_item)
-        
+
         # Memory leak: batch_data references still exist in global_cache
         return processed_items
-    
+
     def expensive_processing(item):
         """CPU and memory intensive processing"""
         # Simulate complex processing
@@ -539,23 +539,23 @@ def detect_memory_leaks():
         result["processed_data"] = item["data"] * 2  # Double memory usage
         result["analysis"] = perform_analysis(item)
         return result
-    
+
     def perform_analysis(item):
         """Analysis function with temporary memory allocation"""
         temp_data = [item["data"]] * 50  # Temporary large allocation
         analysis_result = f"analysis_{len(temp_data)}"
         # temp_data should be garbage collected after function ends
         return analysis_result
-    
+
     # Process multiple batches
     results = []
     for batch_num in range(5):
         batch_result = process_batch(5000)
         results.extend(batch_result)
-        
+
         # Force garbage collection to see real leaks
         gc.collect()
-        
+
     return results
 
 # Run memory leak detection
@@ -593,7 +593,7 @@ for func_name, stats in sorted(high_memory_functions, key=lambda x: abs(x[1]['me
 #### FastAPI Integration
 ```python
 from fastapi import FastAPI, Depends
-from pycallmeter import profile
+from perfscope import profile
 import os
 
 app = FastAPI()
@@ -613,7 +613,7 @@ async def profiling_middleware(request, call_next):
         )
         async def profiled_request():
             return await call_next(request)
-        
+
         return await profiled_request()
     else:
         return await call_next(request)
@@ -629,14 +629,14 @@ async def heavy_computation_endpoint():
 #### Django Integration
 ```python
 # middleware.py
-from pycallmeter import profile
+from perfscope import profile
 from django.conf import settings
 
-class PyCallMeterMiddleware:
+class PerfScopeMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
-        self.profiling_enabled = getattr(settings, 'PYCALLMETER_ENABLED', False)
-    
+        self.profiling_enabled = getattr(settings, 'PERFSCOPE_ENABLED', False)
+
     def __call__(self, request):
         if self.profiling_enabled and self.should_profile(request):
             @profile(
@@ -647,14 +647,14 @@ class PyCallMeterMiddleware:
             )
             def profiled_view():
                 return self.get_response(request)
-            
+
             return profiled_view()
         return self.get_response(request)
-    
+
     def should_profile(self, request):
         # Only profile specific endpoints or users
         return (
-            request.path.startswith('/api/') or 
+            request.path.startswith('/api/') or
             request.GET.get('profile') == 'true' or
             request.user.is_staff
         )
@@ -664,7 +664,7 @@ class PyCallMeterMiddleware:
 
 ### 📊 Benchmarked Overhead
 
-PyCallMeter is engineered for production use with minimal performance impact:
+PerfScope is engineered for production use with minimal performance impact:
 
 | Configuration | Overhead | Use Case | Production Ready |
 |---------------|----------|----------|------------------|
@@ -681,9 +681,9 @@ PyCallMeter is engineered for production use with minimal performance impact:
 import os
 
 # Production-safe profiling
-PROFILING_ENABLED = os.getenv('PYCALLMETER_ENABLED', 'false').lower() == 'true'
-MEMORY_PROFILING = os.getenv('PYCALLMETER_MEMORY', 'false').lower() == 'true'
-DETAIL_LEVEL = os.getenv('PYCALLMETER_DETAIL', 'production')  # production|debug
+PROFILING_ENABLED = os.getenv('PERFSCOPE_ENABLED', 'false').lower() == 'true'
+MEMORY_PROFILING = os.getenv('PERFSCOPE_MEMORY', 'false').lower() == 'true'
+DETAIL_LEVEL = os.getenv('PERFSCOPE_DETAIL', 'production')  # production|debug
 
 @profile(
     enabled=PROFILING_ENABLED,
@@ -700,7 +700,7 @@ def smart_profiled_function():
 #### Conditional Profiling
 ```python
 from functools import wraps
-from pycallmeter import profile
+from perfscope import profile
 
 def conditional_profile(**profile_kwargs):
     """Only profile when conditions are met"""
@@ -713,7 +713,7 @@ def conditional_profile(**profile_kwargs):
                 kwargs.get('profile', False) or            # Explicit request
                 hasattr(threading.current_thread(), 'profile_enabled')  # Thread flag
             )
-            
+
             if should_profile:
                 profiled_func = profile(**profile_kwargs)(func)
                 return profiled_func(*args, **kwargs)
@@ -750,13 +750,13 @@ if report.total_duration > 0.500:  # 500ms budget
 
 ## 🤝 Contributing & Community
 
-PyCallMeter is open-source and welcomes contributions from the community!
+PerfScope is open-source and welcomes contributions from the community!
 
 ### 🛠️ Development Setup
 ```bash
 # Clone the repository
-git clone https://github.com/sattyamjain/pycallmeter.git
-cd pycallmeter
+git clone https://github.com/sattyamjain/perfscope.git
+cd perfscope
 
 # Install development dependencies
 pip install -e ".[dev]"
@@ -794,7 +794,7 @@ ruff check src/ tests/
 9. **Open** a Pull Request
 
 ### 🌟 Feature Requests & Bug Reports
-- **GitHub Issues**: https://github.com/sattyamjain/pycallmeter/issues
+- **GitHub Issues**: https://github.com/sattyamjain/perfscope/issues
 - **Feature Requests**: Use the "enhancement" label
 - **Bug Reports**: Include Python version, OS, and minimal reproduction code
 - **Performance Issues**: Include profiling reports and system specs
@@ -805,26 +805,26 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### Commercial Use
 
-✅ **Commercial use permitted** - Use PyCallMeter in your commercial applications  
-✅ **No attribution required** - Though attribution is appreciated  
-✅ **No usage restrictions** - Deploy in production, SaaS, enterprise software  
-✅ **Modification allowed** - Fork, modify, and redistribute as needed  
+✅ **Commercial use permitted** - Use PerfScope in your commercial applications
+✅ **No attribution required** - Though attribution is appreciated
+✅ **No usage restrictions** - Deploy in production, SaaS, enterprise software
+✅ **Modification allowed** - Fork, modify, and redistribute as needed
 
 ### Security & Privacy
 
-🔒 **No telemetry** - PyCallMeter doesn't send any data externally  
-🔒 **Local processing** - All profiling data stays on your system  
-🔒 **No dependencies** - Minimal attack surface with zero runtime dependencies  
+🔒 **No telemetry** - PerfScope doesn't send any data externally
+🔒 **Local processing** - All profiling data stays on your system
+🔒 **No dependencies** - Minimal attack surface with zero runtime dependencies
 🔒 **Production safe** - Designed for safe deployment in production environments
 
 ## 🙏 Acknowledgments & Inspiration
 
-PyCallMeter was born from the frustration of debugging performance issues in complex Python applications. Special thanks to:
+PerfScope was born from the frustration of debugging performance issues in complex Python applications. Special thanks to:
 
 - **The Python Community** - For building amazing profiling foundations
 - **cProfile & profile** - The original Python profiling modules that inspired this work
 - **py-spy & Austin** - Modern profiling tools that showed what's possible
-- **All Contributors** - Who help make PyCallMeter better with each release
+- **All Contributors** - Who help make PerfScope better with each release
 
 ### 🏆 Awards & Recognition
 - **PyPI Top Downloads** - Trusted by thousands of Python developers
@@ -842,12 +842,12 @@ PyCallMeter was born from the frustration of debugging performance issues in com
 ## 🚀 Ready to Optimize Your Python Performance?
 
 ```bash
-pip install pycallmeter
+pip install perfscope
 ```
 
 **Start profiling in 30 seconds:**
 ```python
-from pycallmeter import profile
+from perfscope import profile
 
 @profile()
 def your_function():
@@ -855,9 +855,9 @@ def your_function():
     pass
 ```
 
-**Join thousands of developers** who use PyCallMeter to:
+**Join thousands of developers** who use PerfScope to:
 - ⚡ **Identify bottlenecks** in their applications
-- 🔍 **Debug memory leaks** before they reach production  
+- 🔍 **Debug memory leaks** before they reach production
 - 📊 **Optimize performance** with data-driven insights
 - 🏭 **Monitor production** applications safely
 
@@ -865,4 +865,4 @@ def your_function():
 
 **🌟 Star us on GitHub** | **📖 Read the Docs** | **💬 Join Discussions** | **🐛 Report Issues**
 
-*PyCallMeter - Making Python Performance Visible, One Function Call at a Time*
+*PerfScope - Making Python Performance Visible, One Function Call at a Time*

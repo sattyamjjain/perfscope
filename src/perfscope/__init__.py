@@ -1,7 +1,7 @@
 """
-PyCallMeter - The Ultimate Python Performance Profiler & APM Tool 🚀
+PerfScope - The Ultimate Python Performance Profiler & APM Tool 🚀
 
-PyCallMeter is the most advanced Python performance profiler and application
+PerfScope is the most advanced Python performance profiler and application
 performance monitoring (APM) tool. Get real-time insights into function execution
 time, memory consumption, call hierarchies, and bottleneck detection with zero
 configuration.
@@ -16,7 +16,7 @@ Perfect for:
 - Microservices performance tracking
 
 Key Features:
-- 🎨 Production-ready logging with [PyCallMeter] identifiers
+- 🎨 Production-ready logging with [PerfScope] identifiers
 - 📊 Advanced performance analytics (CPU, memory, call frequency)
 - 🔄 Full async/await support for modern Python applications
 - 🌳 Interactive call tree visualization in HTML reports
@@ -28,7 +28,7 @@ Key Features:
 - 🏭 Enterprise-ready with configurable logging levels
 
 Quick Start:
-    >>> from pycallmeter import profile
+    >>> from perfscope import profile
     >>>
     >>> @profile()
     >>> def your_function():
@@ -48,7 +48,7 @@ Advanced Usage:
     ...     return processed_data
 
 For more examples and documentation, visit:
-https://github.com/sattyamjain/pycallmeter
+https://github.com/sattyamjain/perfscope
 """
 
 from __future__ import annotations
@@ -57,11 +57,11 @@ __version__ = "1.0.0"
 __author__ = "Sattyam Jain"
 __license__ = "MIT"
 
-from pycallmeter.config import ProfileConfig
+from perfscope.config import ProfileConfig
 
 # Main decorator - this is what most users will use
 # Additional components for advanced usage
-from pycallmeter.profiler import (
+from perfscope.profiler import (
     CallInfo,
     PerformanceMetrics,
     Profiler,

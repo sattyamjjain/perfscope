@@ -1,4 +1,4 @@
-"""Configuration for PyCallMeter profiling."""
+"""Configuration for PerfScope profiling."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ class ProfileConfig:
     include_modules: set[str] | None = None
     exclude_modules: set[str] = field(
         default_factory=lambda: {
-            "pycallmeter",
+            "perfscope",
             "logging",  # Only exclude essentials for clean output
             "_frozen_importlib",
             "_frozen_importlib_external",

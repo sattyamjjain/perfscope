@@ -1,5 +1,5 @@
 """
-Fast and comprehensive test suite for PyCallMeter v1.0.0.
+Fast and comprehensive test suite for PerfScope v1.0.0.
 Tests all possible scenarios where @profile decorator can be used with visible logs.
 """
 
@@ -18,12 +18,12 @@ from typing import Any, Dict, Generator, List, Optional
 
 import pytest
 
-from pycallmeter import (
+from perfscope import (
     profile,
 )
 
-# Disable pycallmeter logging during tests to prevent output pollution
-logging.getLogger("pycallmeter").setLevel(logging.CRITICAL)
+# Disable perfscope logging during tests to prevent output pollution
+logging.getLogger("perfscope").setLevel(logging.CRITICAL)
 # Configure root logger for test output only
 logging.basicConfig(level=logging.WARNING, format="%(message)s", force=True, stream=sys.stderr)
 

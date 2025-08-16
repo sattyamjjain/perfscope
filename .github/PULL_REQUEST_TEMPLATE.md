@@ -74,7 +74,7 @@ If this change affects performance, please provide:
 
 - [ ] Benchmarks showing performance impact
 - [ ] Memory usage impact analysis
-- [ ] Profiling results (using PyCallMeter itself!)
+- [ ] Profiling results (using PerfScope itself!)
 
 ## 🔍 Code Review Notes
 

@@ -137,9 +137,7 @@ dev = [
     "psutil>=5.9.0",           # System monitoring
     
     # Code Quality & Formatting
-    "ruff>=0.1.0",             # Fast Python linter
-    "black>=23.7.0",           # Code formatter
-    "isort>=5.12.0",           # Import sorter
+    "ruff>=0.1.0",             # Fast Python linter and formatter
     
     # Type Checking
     "mypy>=1.5.0",             # Static type checker

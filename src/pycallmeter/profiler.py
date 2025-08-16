@@ -454,11 +454,11 @@ class Profiler:
         # CRITICAL: Always exclude pycallmeter itself to prevent infinite recursion
         if module.startswith("pycallmeter"):
             return False
-        
-        # Also exclude logging to prevent excessive noise  
+
+        # Also exclude logging to prevent excessive noise
         if module.startswith("logging"):
             return False
-            
+
         if any(module.startswith(m) for m in self.config.exclude_modules):
             return False
 

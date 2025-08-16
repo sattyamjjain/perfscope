@@ -245,9 +245,7 @@ class PerformanceLogger:
                 )
 
         # Exception summary
-        exceptions = [
-            (n, s) for n, s in report.statistics.items() if s.get("exceptions", 0) > 0
-        ]
+        exceptions = [(n, s) for n, s in report.statistics.items() if s.get("exceptions", 0) > 0]
         if exceptions:
             for name, stats in exceptions:
                 self.logger.error(f"ERRORS[{name}] {stats['exceptions']} exceptions")
@@ -283,15 +281,9 @@ class ProfileReport:
             "cpu_efficiency": self.cpu_efficiency,
             "total_calls": self.total_calls,
             "unique_functions": self.unique_functions,
-            "memory_start_mb": (
-                self.memory_start / (1024 * 1024) if self.memory_start else None
-            ),
-            "memory_end_mb": (
-                self.memory_end / (1024 * 1024) if self.memory_end else None
-            ),
-            "memory_peak_mb": (
-                self.memory_peak / (1024 * 1024) if self.memory_peak else None
-            ),
+            "memory_start_mb": (self.memory_start / (1024 * 1024) if self.memory_start else None),
+            "memory_end_mb": (self.memory_end / (1024 * 1024) if self.memory_end else None),
+            "memory_peak_mb": (self.memory_peak / (1024 * 1024) if self.memory_peak else None),
             "statistics": self.statistics,
             "thread_stats": self.thread_stats,
         }
@@ -485,9 +477,7 @@ class Profiler:
             metrics = PerformanceMetrics(
                 start_time=time.perf_counter(),
                 cpu_time_start=time.process_time(),
-                memory_start=(
-                    self._get_memory_usage() if self.config.trace_memory else None
-                ),
+                memory_start=(self._get_memory_usage() if self.config.trace_memory else None),
                 gc_count_start=gc.get_count() if self.config.trace_memory else None,
             )
 
@@ -513,9 +503,7 @@ class Profiler:
                 metrics=metrics,
                 call_depth=len(stack),
                 is_async=asyncio.iscoroutinefunction(frame.f_globals.get(code.co_name)),
-                is_generator=inspect.isgeneratorfunction(
-                    frame.f_globals.get(code.co_name)
-                ),
+                is_generator=inspect.isgeneratorfunction(frame.f_globals.get(code.co_name)),
                 is_builtin=code.co_filename.startswith("<"),
             )
 
@@ -561,12 +549,8 @@ class Profiler:
                 thread_name = call_info.metrics.thread_name
                 with self._lock:
                     self._thread_stats[thread_name]["calls"] += 1
-                    self._thread_stats[thread_name][
-                        "total_time"
-                    ] += call_info.metrics.wall_time
-                    self._thread_stats[thread_name][
-                        "cpu_time"
-                    ] += call_info.metrics.cpu_time
+                    self._thread_stats[thread_name]["total_time"] += call_info.metrics.wall_time
+                    self._thread_stats[thread_name]["cpu_time"] += call_info.metrics.cpu_time
 
                 # Log call end
                 self.performance_logger.log_call_end(call_info, arg)
@@ -592,12 +576,8 @@ class Profiler:
 
     def get_report(self) -> ProfileReport:
         """Generate comprehensive profiling report."""
-        total_duration = (
-            time.perf_counter() - self._start_time if self._start_time else 0
-        )
-        total_cpu_time = (
-            time.process_time() - self._start_cpu_time if self._start_cpu_time else 0
-        )
+        total_duration = time.perf_counter() - self._start_time if self._start_time else 0
+        total_cpu_time = time.process_time() - self._start_cpu_time if self._start_cpu_time else 0
 
         # Calculate statistics
         statistics: dict[str, dict[str, float]] = defaultdict(
@@ -780,9 +760,7 @@ def profile(
                 except Exception as e:
                     exception_occurred = True
                     # Log the exception but don't swallow it
-                    logger.error(
-                        f"Exception in {func.__name__}: {e.__class__.__name__}: {e}"
-                    )
+                    logger.error(f"Exception in {func.__name__}: {e.__class__.__name__}: {e}")
                     raise
                 finally:
                     try:
@@ -801,9 +779,7 @@ def profile(
                         logger.error(f"Error during profiler cleanup: {cleanup_error}")
                         # Don't raise cleanup errors if the main function succeeded
                         if not exception_occurred:
-                            logger.warning(
-                                "Profiler cleanup failed but function succeeded"
-                            )
+                            logger.warning("Profiler cleanup failed but function succeeded")
 
             return async_wrapper
         else:
@@ -821,9 +797,7 @@ def profile(
                 except Exception as e:
                     exception_occurred = True
                     # Log the exception but don't swallow it
-                    logger.error(
-                        f"Exception in {func.__name__}: {e.__class__.__name__}: {e}"
-                    )
+                    logger.error(f"Exception in {func.__name__}: {e.__class__.__name__}: {e}")
                     raise
                 finally:
                     try:
@@ -842,9 +816,7 @@ def profile(
                         logger.error(f"Error during profiler cleanup: {cleanup_error}")
                         # Don't raise cleanup errors if the main function succeeded
                         if not exception_occurred:
-                            logger.warning(
-                                "Profiler cleanup failed but function succeeded"
-                            )
+                            logger.warning("Profiler cleanup failed but function succeeded")
 
             return wrapper
 

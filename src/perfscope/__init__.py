@@ -1,5 +1,5 @@
 """
-PerfScope - The Ultimate Python Performance Profiler & APM Tool 🚀
+PerfScope - The Ultimate Python Performance Profiler & APM Tool
 
 PerfScope is the most advanced Python performance profiler and application
 performance monitoring (APM) tool. Get real-time insights into function execution
@@ -16,16 +16,16 @@ Perfect for:
 - Microservices performance tracking
 
 Key Features:
-- 🎨 Production-ready logging with [PerfScope] identifiers
-- 📊 Advanced performance analytics (CPU, memory, call frequency)
-- 🔄 Full async/await support for modern Python applications
-- 🌳 Interactive call tree visualization in HTML reports
-- 💾 Memory leak detection with garbage collection tracking
-- 📈 Export reports in HTML, JSON, CSV formats
-- ⚡ Minimal overhead (2-5% in production)
-- 🎯 Smart filtering and bottleneck detection
-- 🔌 Zero runtime dependencies
-- 🏭 Enterprise-ready with configurable logging levels
+- Production-ready logging with [PerfScope] identifiers
+- Advanced performance analytics (CPU, memory, call frequency)
+- Full async/await support for modern Python applications
+- Interactive call tree visualization in HTML reports
+- Memory leak detection with garbage collection tracking
+- Export reports in HTML, JSON, CSV formats
+- Minimal overhead (2-5% in production)
+- Smart filtering and bottleneck detection
+- Zero runtime dependencies
+- Enterprise-ready with configurable logging levels
 
 Quick Start:
     >>> from perfscope import profile

@@ -32,7 +32,7 @@ pytest --cov=perfscope --cov-report=term-missing --cov-report=html
 pytest tests/test_profiler.py -v
 
 # Run a specific test
-pytest tests/test_profiler.py::TestBasicFunctionProfiling::test_empty_function -v
+pytest tests/test_profiler.py::test_basic_function_profiling -v
 ```
 
 ### Code Quality
@@ -122,7 +122,7 @@ make clean
 
 - **Core**: Zero runtime dependencies (pure Python)
 - **Optional**: `psutil` for enhanced memory tracking (installed with `[full]` extra)
-- **Development**: pytest, ruff, mypy, bandit, safety, pre-commit (installed with `[dev]` extra)
+- **Development**: pytest, ruff, mypy, pre-commit, build, twine (installed with `[dev]` extra)
 - **Web/Science**: Optional extras available for `[web]`, `[science]`, `[all]`
 
 ## Testing Approach
@@ -150,3 +150,4 @@ Run tests with visible output using `pytest -v -s` to see profiling logs during 
 - Thread-local storage is used for managing per-thread call stacks
 - CI/CD pipeline runs tests on Python 3.8-3.12 across Linux, Windows, and macOS
 - All code must pass ruff linting, mypy type checking, and security scans before merge
+- **Professional Standards**: No emojis in code, logs, or reports - clean production-ready output only

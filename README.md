@@ -1,4 +1,4 @@
-# PerfScope 🚀
+# PerfScope
 
 > **The Ultimate Python Performance Profiler** - Production-Ready Performance Monitoring, Memory Tracking & Call Tree Analysis
 
@@ -13,49 +13,49 @@
 
 **PerfScope** is the most advanced **Python performance profiler** and **application performance monitoring (APM)** tool. Get **real-time insights** into function execution time, memory consumption, call hierarchies, and bottleneck detection with **zero configuration**. Perfect for **Django**, **Flask**, **FastAPI**, **async applications**, **data science**, and **machine learning** performance optimization.
 
-## 🎯 Why Choose PerfScope?
+## Why Choose PerfScope?
 
-- **🎨 Production-Ready Logging** - Clean, structured logs without emojis for enterprise environments
-- **📊 Advanced Performance Analytics** - CPU time, wall time, memory usage, call frequency analysis
-- **🔄 Async/Await Support** - Full compatibility with modern Python async frameworks
-- **🌳 Interactive Call Trees** - Visual representation of function call hierarchies
-- **💾 Memory Leak Detection** - Track memory allocations and identify memory leaks
-- **📈 Export Reports** - HTML, JSON, CSV formats for integration with monitoring systems
-- **⚡ Minimal Overhead** - Optimized for production use with configurable tracing levels
-- **🎯 Smart Filtering** - Focus on bottlenecks with intelligent threshold-based logging
-- **🔌 Zero Dependencies** - Pure Python core with optional extensions for enhanced features
+- **Production-Ready Logging** - Clean, structured logs for enterprise environments
+- **Advanced Performance Analytics** - CPU time, wall time, memory usage, call frequency analysis
+- **Async/Await Support** - Full compatibility with modern Python async frameworks
+- **Interactive Call Trees** - Visual representation of function call hierarchies
+- **Memory Leak Detection** - Track memory allocations and identify memory leaks
+- **Export Reports** - HTML, JSON, CSV formats for integration with monitoring systems
+- **Minimal Overhead** - Optimized for production use with configurable tracing levels
+- **Smart Filtering** - Focus on bottlenecks with intelligent threshold-based logging
+- **Zero Dependencies** - Pure Python core with optional extensions for enhanced features
 
-## ✨ Key Features & Benefits
+## Key Features & Benefits
 
-### 🚀 **Performance Monitoring**
+### Performance Monitoring
 - **Function Call Tracing** - Automatic detection of all nested function calls with depth control
 - **Execution Time Analysis** - Precise wall-clock and CPU time measurements down to microseconds
 - **Memory Usage Tracking** - Real-time memory allocation monitoring and peak usage detection
 - **Call Frequency Analysis** - Identify hot paths and frequently called functions
 - **Bottleneck Detection** - Automatic identification of performance bottlenecks with configurable thresholds
 
-### 🎯 **Developer Experience**
+### Developer Experience
 - **Single Decorator Setup** - Add `@profile()` to any function for instant profiling
 - **Production-Ready Logs** - Clean, structured logging format with [PerfScope] identifiers
 - **Zero Configuration** - Works out-of-the-box with sensible defaults
 - **IDE Integration** - Type hints and IntelliSense support for all APIs
 - **Framework Compatibility** - Works with Django, Flask, FastAPI, Celery, and all Python frameworks
 
-### 📊 **Advanced Analytics**
+### Advanced Analytics
 - **Call Tree Visualization** - Complete execution hierarchy with parent-child relationships
 - **Memory Leak Detection** - Track memory allocations and garbage collection patterns
 - **Async/Concurrent Profiling** - Full support for asyncio, threading, and multiprocessing
 - **Report Generation** - Export detailed reports in HTML, JSON, and CSV formats
 - **Statistical Analysis** - Min/max/average execution times, call distributions, and trends
 
-### 🔧 **Enterprise Ready**
+### Enterprise Ready
 - **Configurable Logging Levels** - From debug tracing to production summaries
 - **Module Filtering** - Include/exclude specific modules or packages
 - **Depth Control** - Limit tracing depth for performance optimization
 - **Threshold-Based Reporting** - Only log functions exceeding specified execution times
 - **Thread Safety** - Full support for multi-threaded applications
 
-## 📦 Installation
+## Installation
 
 ### Quick Install
 ```bash
@@ -74,7 +74,7 @@ pip install perfscope[dev]
 - **Zero dependencies** for core functionality
 - **Optional**: psutil for enhanced system memory tracking
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### 30-Second Setup
 
@@ -140,7 +140,7 @@ async def fetch_multiple_apis(urls):
 # - Exception handling performance
 ```
 
-## 🎯 Real-World Examples
+## Real-World Examples
 
 ### Enterprise Web Application
 
@@ -268,11 +268,11 @@ def api_user_dashboard(request):
 # - Database connection overhead
 ```
 
-## 📊 Understanding Performance Reports
+## Understanding Performance Reports
 
 PerfScope generates comprehensive reports with multiple visualization formats:
 
-### 📈 Interactive Call Tree (HTML Report)
+### Interactive Call Tree (HTML Report)
 ```
 process_order_endpoint (245.67ms, self: 12.4ms)                    [Memory: +2.4MB]
 ├─ validate_order_request (8.3ms, self: 8.3ms)                     [Memory: +0.1MB]
@@ -290,38 +290,38 @@ process_order_endpoint (245.67ms, self: 12.4ms)                    [Memory: +2.4
 └─ save_order_transaction (28.9ms, self: 28.9ms)                   [Memory: +0.6MB]
 ```
 
-### 📊 Performance Dashboard
+### Performance Dashboard
 
-**⏱️ Execution Summary**
+**Execution Summary**
 - **Total Duration**: 245.67ms (wall-clock time)
 - **CPU Time**: 89.23ms (36.3% CPU efficiency)
 - **Total Function Calls**: 47
 - **Unique Functions**: 18
 - **Call Tree Depth**: 4 levels
 
-**💾 Memory Analysis**
+**Memory Analysis**
 - **Peak Memory**: 125.4MB
 - **Memory Delta**: +2.4MB
 - **Memory Efficiency**: 98.1%
 - **GC Collections**: 2 (gen0), 1 (gen1), 0 (gen2)
 
-**🐌 Performance Bottlenecks** (>15% runtime)
+**Performance Bottlenecks** (>15% runtime)
 | Function | Runtime % | Time (ms) | Calls | Avg Time | Memory Impact |
 |----------|-----------|-----------|-------|----------|---------------|
 | `fetch_customer_profile` | 34.2% | 84.1ms | 1 | 84.1ms | +0.8MB |
 | `external_pricing_api_call` | 15.3% | 37.5ms | 1 | 37.5ms | +0.2MB |
 | `execute_customer_query` | 25.3% | 62.1ms | 1 | 62.1ms | +0.5MB |
 
-**🔥 Hot Paths** (most frequently called)
+**Hot Paths** (most frequently called)
 | Function | Calls | Total Time | Avg per Call | Impact Score |
 |----------|-------|------------|--------------|-------------|
 | `validation_helper` | 12 | 24.6ms | 2.1ms | High |
 | `format_currency` | 8 | 1.2ms | 0.15ms | Low |
 | `log_performance_metric` | 47 | 5.8ms | 0.12ms | Medium |
 
-## ⚙️ Advanced Configuration
+## Advanced Configuration
 
-### 🎛️ Complete Configuration Reference
+### Complete Configuration Reference
 
 ```python
 @profile(
@@ -354,7 +354,7 @@ def your_function():
     pass
 ```
 
-### 🏭 Production-Ready Configurations
+### Production-Ready Configurations
 
 #### High-Performance Production Setup
 ```python
@@ -395,9 +395,9 @@ def your_function():
 )
 ```
 
-## 🔬 Advanced Use Cases & Integrations
+## Advanced Use Cases & Integrations
 
-### 🔧 Manual Profiling API
+### Manual Profiling API
 
 ```python
 from perfscope import Profiler, ProfileConfig
@@ -432,7 +432,7 @@ print(f"Memory peak: {report.memory_peak / (1024*1024):.1f}MB")
 print(f"Function calls: {report.total_calls}")
 ```
 
-### 📊 Programmatic Report Analysis
+### Programmatic Report Analysis
 
 ```python
 @profile(trace_memory=True)
@@ -492,7 +492,7 @@ with open("performance_data.json", "w") as f:
     f.write(report.to_json(indent=2))           # Raw JSON data
 ```
 
-### 🔍 Memory Leak Detection & Analysis
+### Memory Leak Detection & Analysis
 
 ```python
 import gc
@@ -588,7 +588,7 @@ for func_name, stats in sorted(high_memory_functions, key=lambda x: abs(x[1]['me
 # - Garbage collection efficiency
 ```
 
-### 🌐 Web Framework Integration
+### Web Framework Integration
 
 #### FastAPI Integration
 ```python
@@ -660,9 +660,9 @@ class PerfScopeMiddleware:
         )
 ```
 
-## ⚡ Performance Impact & Optimization
+## Performance Impact & Optimization
 
-### 📊 Benchmarked Overhead
+### Benchmarked Overhead
 
 PerfScope is engineered for production use with minimal performance impact:
 
@@ -674,7 +674,7 @@ PerfScope is engineered for production use with minimal performance impact:
 | **+ Detailed Tracing** | 15-25% | Development debugging | ⚠️ Dev/Staging only |
 | **+ Line Tracing** | 50-200% | Deep debugging | ❌ Debug only |
 
-### 🎛️ Production Optimization Strategies
+### Production Optimization Strategies
 
 #### Environment-Based Control
 ```python
@@ -748,11 +748,11 @@ if report.total_duration > 0.500:  # 500ms budget
     # Send alert, log to monitoring system, etc.
 ```
 
-## 🤝 Contributing & Community
+## Contributing & Community
 
 PerfScope is open-source and welcomes contributions from the community!
 
-### 🛠️ Development Setup
+### Development Setup
 ```bash
 # Clone the repository
 git clone https://github.com/sattyamjain/perfscope.git
@@ -774,7 +774,7 @@ black src/ tests/
 ruff check src/ tests/
 ```
 
-### 🎯 Contribution Areas
+### Contribution Areas
 - **Performance Optimizations** - Reduce profiling overhead
 - **Visualization Enhancements** - Improve HTML reports and charts
 - **Framework Integrations** - Add support for more Python frameworks
@@ -782,7 +782,7 @@ ruff check src/ tests/
 - **Documentation** - Examples, tutorials, best practices
 - **Testing** - Unit tests, integration tests, performance benchmarks
 
-### 📝 Contribution Guidelines
+### Contribution Guidelines
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
 3. **Write** tests for your changes
@@ -793,13 +793,13 @@ ruff check src/ tests/
 8. **Push** to the branch (`git push origin feature/amazing-feature`)
 9. **Open** a Pull Request
 
-### 🌟 Feature Requests & Bug Reports
+### Feature Requests & Bug Reports
 - **GitHub Issues**: https://github.com/sattyamjain/perfscope/issues
 - **Feature Requests**: Use the "enhancement" label
 - **Bug Reports**: Include Python version, OS, and minimal reproduction code
 - **Performance Issues**: Include profiling reports and system specs
 
-## 📝 License & Legal
+## License & Legal
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
@@ -817,7 +817,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 🔒 **No dependencies** - Minimal attack surface with zero runtime dependencies
 🔒 **Production safe** - Designed for safe deployment in production environments
 
-## 🙏 Acknowledgments & Inspiration
+## Acknowledgments & Inspiration
 
 PerfScope was born from the frustration of debugging performance issues in complex Python applications. Special thanks to:
 
@@ -826,12 +826,12 @@ PerfScope was born from the frustration of debugging performance issues in compl
 - **py-spy & Austin** - Modern profiling tools that showed what's possible
 - **All Contributors** - Who help make PerfScope better with each release
 
-### 🏆 Awards & Recognition
+### Awards & Recognition
 - **PyPI Top Downloads** - Trusted by thousands of Python developers
 - **GitHub Stars** - Join the growing community of performance-conscious developers
 - **Production Proven** - Used in enterprise applications processing millions of requests
 
-### 📚 Related Projects
+### Related Projects
 - **[py-spy](https://github.com/benfred/py-spy)** - Sampling profiler for production
 - **[line_profiler](https://github.com/pyutils/line_profiler)** - Line-by-line profiling
 - **[memory_profiler](https://github.com/pythonprofilers/memory_profiler)** - Memory usage profiling
@@ -839,7 +839,7 @@ PerfScope was born from the frustration of debugging performance issues in compl
 
 ---
 
-## 🚀 Ready to Optimize Your Python Performance?
+## Ready to Optimize Your Python Performance?
 
 ```bash
 pip install perfscope
@@ -863,6 +863,6 @@ def your_function():
 
 ---
 
-**🌟 Star us on GitHub** | **📖 Read the Docs** | **💬 Join Discussions** | **🐛 Report Issues**
+**Star us on GitHub** | **Read the Docs** | **Join Discussions** | **Report Issues**
 
 *PerfScope - Making Python Performance Visible, One Function Call at a Time*

@@ -53,7 +53,7 @@ https://github.com/sattyamjain/perfscope
 
 from __future__ import annotations
 
-__version__ = "1.0.0"
+__version__ = "1.0.4"
 __author__ = "Sattyam Jain"
 __license__ = "MIT"
 

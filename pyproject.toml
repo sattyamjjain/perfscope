@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "perfscope"
-version = "1.0.2"
+version = "1.0.3"
 description = "🚀 The Ultimate Python Performance Profiler & APM Tool - Production-Ready Performance Monitoring, Memory Tracking, Call Tree Analysis & Bottleneck Detection for Django, Flask, FastAPI, Async Applications, Data Science & Machine Learning"
 readme = "README.md"
 authors = [
@@ -46,7 +46,6 @@ classifiers = [
     # Topics - Core Functionality
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Debuggers",
-    "Topic :: Software Development :: Profilers",
     "Topic :: Software Development :: Quality Assurance",
     "Topic :: Software Development :: Testing",
 

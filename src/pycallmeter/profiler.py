@@ -245,9 +245,7 @@ class PerformanceLogger:
                 )
 
         # Exception summary
-        exceptions = [
-            (n, s) for n, s in report.statistics.items() if s.get("exceptions", 0) > 0
-        ]
+        exceptions = [(n, s) for n, s in report.statistics.items() if s.get("exceptions", 0) > 0]
         if exceptions:
             for name, stats in exceptions:
                 self.logger.error(f"ERRORS[{name}] {stats['exceptions']} exceptions")
@@ -283,15 +281,9 @@ class ProfileReport:
             "cpu_efficiency": self.cpu_efficiency,
             "total_calls": self.total_calls,
             "unique_functions": self.unique_functions,
-            "memory_start_mb": (
-                self.memory_start / (1024 * 1024) if self.memory_start else None
-            ),
-            "memory_end_mb": (
-                self.memory_end / (1024 * 1024) if self.memory_end else None
-            ),
-            "memory_peak_mb": (
-                self.memory_peak / (1024 * 1024) if self.memory_peak else None
-            ),
+            "memory_start_mb": (self.memory_start / (1024 * 1024) if self.memory_start else None),
+            "memory_end_mb": (self.memory_end / (1024 * 1024) if self.memory_end else None),
+            "memory_peak_mb": (self.memory_peak / (1024 * 1024) if self.memory_peak else None),
             "statistics": self.statistics,
             "thread_stats": self.thread_stats,
         }
@@ -301,10 +293,24 @@ class ProfileReport:
         return json.dumps(self.to_dict(), indent=indent, default=str)
 
     def save(self, path: str | Path) -> None:
-        """Save report to JSON file."""
-        path = Path(path)
-        path.write_text(self.to_json())
-        logger.info(f"Report saved to: {path}")
+        """Save report to JSON file.
+
+        Args:
+            path: Path where to save the report.
+
+        Raises:
+            ValueError: If path is invalid or cannot be written.
+        """
+        try:
+            path = Path(path).resolve()
+            # Ensure parent directory exists
+            path.parent.mkdir(parents=True, exist_ok=True)
+            # Write with explicit encoding
+            path.write_text(self.to_json(), encoding="utf-8")
+            logger.info(f"Report saved to: {path}")
+        except OSError as e:
+            logger.error(f"Failed to save report to {path}: {e}")
+            raise ValueError(f"Cannot save report to {path}: {e}") from e
 
 
 class Profiler:
@@ -369,19 +375,25 @@ class Profiler:
         self._active = True
 
     def stop(self) -> None:
-        """Stop profiling."""
+        """Stop profiling and clean up resources."""
         if not self._active:
             return
 
-        # Restore original trace
-        if self.config.trace_calls:
-            sys.settrace(self._original_trace)
+        try:
+            # Restore original trace
+            if self.config.trace_calls:
+                sys.settrace(self._original_trace)
+                self._original_trace = None
 
-        # Get final memory usage
-        if self.config.trace_memory:
-            self._memory_peak = self._get_peak_memory()
-
-        self._active = False
+            # Get final memory usage
+            if self.config.trace_memory:
+                self._memory_peak = self._get_peak_memory()
+                # Note: We don't stop tracemalloc here as other code might be using it
+        finally:
+            self._active = False
+            # Clear thread-local storage to prevent memory leaks
+            if hasattr(self._local, "stack"):
+                self._local.stack.clear()
 
     def _get_memory_usage(self) -> int:
         """Get current memory usage in bytes."""
@@ -400,13 +412,23 @@ class Profiler:
         return 0
 
     def _get_object_size(self, obj: Any) -> int:
-        """Estimate object size in bytes."""
+        """Estimate object size in bytes safely.
+
+        Args:
+            obj: Object to measure.
+
+        Returns:
+            Size in bytes, or 0 if measurement fails.
+        """
         try:
-            return sys.getsizeof(obj)
-        except Exception:
+            # Avoid infinite recursion for certain object types
+            if hasattr(obj, "__sizeof__"):
+                return sys.getsizeof(obj)
+            return 0
+        except (TypeError, RecursionError, AttributeError):
             return 0
 
-    def _should_trace(self, frame) -> bool:
+    def _should_trace(self, frame: Any) -> bool:
         """Check if frame should be traced."""
         if not frame or not frame.f_code:
             return False
@@ -429,12 +451,20 @@ class Profiler:
             if not any(module.startswith(m) for m in self.config.include_modules):
                 return False
 
+        # CRITICAL: Always exclude pycallmeter itself to prevent infinite recursion
+        if module.startswith("pycallmeter"):
+            return False
+        
+        # Also exclude logging to prevent excessive noise  
+        if module.startswith("logging"):
+            return False
+            
         if any(module.startswith(m) for m in self.config.exclude_modules):
             return False
 
         return True
 
-    def _trace_calls(self, frame, event: str, arg: Any) -> Callable | None:
+    def _trace_calls(self, frame: Any, event: str, arg: Any) -> Callable | None:
         """Trace function for sys.settrace."""
         if event == "call":
             if not self._should_trace(frame):
@@ -447,9 +477,7 @@ class Profiler:
             metrics = PerformanceMetrics(
                 start_time=time.perf_counter(),
                 cpu_time_start=time.process_time(),
-                memory_start=(
-                    self._get_memory_usage() if self.config.trace_memory else None
-                ),
+                memory_start=(self._get_memory_usage() if self.config.trace_memory else None),
                 gc_count_start=gc.get_count() if self.config.trace_memory else None,
             )
 
@@ -475,9 +503,7 @@ class Profiler:
                 metrics=metrics,
                 call_depth=len(stack),
                 is_async=asyncio.iscoroutinefunction(frame.f_globals.get(code.co_name)),
-                is_generator=inspect.isgeneratorfunction(
-                    frame.f_globals.get(code.co_name)
-                ),
+                is_generator=inspect.isgeneratorfunction(frame.f_globals.get(code.co_name)),
                 is_builtin=code.co_filename.startswith("<"),
             )
 
@@ -523,12 +549,8 @@ class Profiler:
                 thread_name = call_info.metrics.thread_name
                 with self._lock:
                     self._thread_stats[thread_name]["calls"] += 1
-                    self._thread_stats[thread_name][
-                        "total_time"
-                    ] += call_info.metrics.wall_time
-                    self._thread_stats[thread_name][
-                        "cpu_time"
-                    ] += call_info.metrics.cpu_time
+                    self._thread_stats[thread_name]["total_time"] += call_info.metrics.wall_time
+                    self._thread_stats[thread_name]["cpu_time"] += call_info.metrics.cpu_time
 
                 # Log call end
                 self.performance_logger.log_call_end(call_info, arg)
@@ -545,7 +567,7 @@ class Profiler:
 
         return self._trace_calls
 
-    def _trace_lines(self, frame, event: str, arg: Any) -> Callable | None:
+    def _trace_lines(self, frame: Any, event: str, arg: Any) -> Callable | None:
         """Trace function with line tracking."""
         if event == "line":
             # Could add line-level tracking here if needed
@@ -554,12 +576,8 @@ class Profiler:
 
     def get_report(self) -> ProfileReport:
         """Generate comprehensive profiling report."""
-        total_duration = (
-            time.perf_counter() - self._start_time if self._start_time else 0
-        )
-        total_cpu_time = (
-            time.process_time() - self._start_cpu_time if self._start_cpu_time else 0
-        )
+        total_duration = time.perf_counter() - self._start_time if self._start_time else 0
+        total_cpu_time = time.process_time() - self._start_cpu_time if self._start_cpu_time else 0
 
         # Calculate statistics
         statistics: dict[str, dict[str, float]] = defaultdict(
@@ -576,7 +594,7 @@ class Profiler:
             }
         )
 
-        def process_call(call: CallInfo):
+        def process_call(call: CallInfo) -> None:
             key = call.qualname
             stats = statistics[key]
 
@@ -637,12 +655,12 @@ class Profiler:
 
         return report
 
-    def __enter__(self):
+    def __enter__(self) -> Profiler:
         """Context manager entry."""
         self.start()
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: Any) -> None:
         """Context manager exit."""
         self.stop()
 
@@ -698,8 +716,17 @@ def profile(
         if not enabled:
             return func
 
+        # Validate function is callable
+        if not callable(func):
+            raise TypeError(
+                f"profile decorator can only be applied to callable objects, got {type(func)}"
+            )
+
         # Set logging level
-        logger.setLevel(getattr(logging, log_level.upper()))
+        try:
+            logger.setLevel(getattr(logging, log_level.upper()))
+        except AttributeError:
+            logger.setLevel(logging.INFO)
 
         config = ProfileConfig(
             enabled=enabled,
@@ -722,50 +749,74 @@ def profile(
 
             @functools.wraps(func)
             async def async_wrapper(*args, **kwargs):
-
                 profiler = Profiler(config)
-                profiler.start()
+                report = None
+                exception_occurred = False
 
                 try:
+                    profiler.start()
                     result = await func(*args, **kwargs)
                     return result
                 except Exception as e:
-                    logger.error(f"Unhandled exception: {e}")
+                    exception_occurred = True
+                    # Log the exception but don't swallow it
+                    logger.error(f"Exception in {func.__name__}: {e.__class__.__name__}: {e}")
                     raise
                 finally:
-                    profiler.stop()
-                    report = profiler.get_report()
+                    try:
+                        profiler.stop()
+                        report = profiler.get_report()
 
-                    if config.auto_report and config.report_path:
-                        report.save(config.report_path)
+                        if config.auto_report and config.report_path:
+                            try:
+                                report.save(config.report_path)
+                            except Exception as save_error:
+                                logger.error(f"Failed to save report: {save_error}")
 
-                    # Store report as function attribute
-                    async_wrapper.profile_report = report
+                        # Store report as function attribute
+                        async_wrapper.profile_report = report
+                    except Exception as cleanup_error:
+                        logger.error(f"Error during profiler cleanup: {cleanup_error}")
+                        # Don't raise cleanup errors if the main function succeeded
+                        if not exception_occurred:
+                            logger.warning("Profiler cleanup failed but function succeeded")
 
             return async_wrapper
         else:
 
             @functools.wraps(func)
             def wrapper(*args, **kwargs):
-
                 profiler = Profiler(config)
-                profiler.start()
+                report = None
+                exception_occurred = False
 
                 try:
+                    profiler.start()
                     result = func(*args, **kwargs)
                     return result
                 except Exception as e:
-                    logger.error(f"Unhandled exception: {e}")
+                    exception_occurred = True
+                    # Log the exception but don't swallow it
+                    logger.error(f"Exception in {func.__name__}: {e.__class__.__name__}: {e}")
                     raise
                 finally:
-                    profiler.stop()
-                    report = profiler.get_report()
+                    try:
+                        profiler.stop()
+                        report = profiler.get_report()
 
-                    if config.auto_report and config.report_path:
-                        report.save(config.report_path)
+                        if config.auto_report and config.report_path:
+                            try:
+                                report.save(config.report_path)
+                            except Exception as save_error:
+                                logger.error(f"Failed to save report: {save_error}")
 
-                    # Store report as function attribute
-                    wrapper.profile_report = report
+                        # Store report as function attribute
+                        wrapper.profile_report = report
+                    except Exception as cleanup_error:
+                        logger.error(f"Error during profiler cleanup: {cleanup_error}")
+                        # Don't raise cleanup errors if the main function succeeded
+                        if not exception_occurred:
+                            logger.warning("Profiler cleanup failed but function succeeded")
 
             return wrapper
 

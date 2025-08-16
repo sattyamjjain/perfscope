@@ -9,10 +9,10 @@ description = "🚀 The Ultimate Python Performance Profiler & APM Tool - Produc
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Sattyam Jain", email = "sattyamjain@example.com"},
+    {name = "Sattyam Jain"},
 ]
 maintainers = [
-    {name = "Sattyam Jain", email = "sattyamjain@example.com"},
+    {name = "Sattyam Jain"},
 ]
 classifiers = [
     # Development Status

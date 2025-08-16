@@ -7,6 +7,9 @@ import asyncio
 import gc
 import json
 import logging
+
+# Configure test logging to prevent interference with profiler
+import sys
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -19,8 +22,10 @@ from pycallmeter import (
     profile,
 )
 
-# Disable verbose logging to prevent test hanging
-logging.basicConfig(level=logging.WARNING, format="%(message)s", force=True)
+# Disable pycallmeter logging during tests to prevent output pollution
+logging.getLogger("pycallmeter").setLevel(logging.CRITICAL)
+# Configure root logger for test output only
+logging.basicConfig(level=logging.WARNING, format="%(message)s", force=True, stream=sys.stderr)
 
 
 class TestBasicFunctionProfiling:
@@ -40,9 +45,7 @@ class TestBasicFunctionProfiling:
 
         report = empty_function.profile_report
         assert report.total_duration > 0
-        print(
-            f"✓ Empty function: {report.total_calls} calls, {report.total_duration:.4f}s"
-        )
+        print(f"✓ Empty function: {report.total_calls} calls, {report.total_duration:.4f}s")
 
     def test_simple_arithmetic(self):
         """Test profiling arithmetic operations."""
@@ -263,8 +266,7 @@ class TestThreadPoolExecutorProfiling:
             loop = asyncio.get_event_loop()
             with ThreadPoolExecutor(max_workers=2) as executor:
                 tasks = [
-                    loop.run_in_executor(executor, blocking_task, f"data{i}")
-                    for i in range(2)
+                    loop.run_in_executor(executor, blocking_task, f"data{i}") for i in range(2)
                 ]
                 return await asyncio.gather(*tasks)
 
@@ -592,9 +594,7 @@ class TestComplexWorkflows:
                 "app_name": f"App_{session_id[:6]}",
             }
 
-        def check_existing_share(
-            session_id: str, email: str
-        ) -> Optional[Dict[str, Any]]:
+        def check_existing_share(session_id: str, email: str) -> Optional[Dict[str, Any]]:
             """Simulate check for existing share."""
             time.sleep(0.005)  # DB query
             return None  # No existing share
@@ -604,9 +604,7 @@ class TestComplexWorkflows:
             time.sleep(0.003)  # Permission query
             return user_id > 0
 
-        def create_session_share(
-            session_id: str, email: str, user_id: int
-        ) -> Dict[str, Any]:
+        def create_session_share(session_id: str, email: str, user_id: int) -> Dict[str, Any]:
             """Simulate creating session share."""
             time.sleep(0.012)  # DB write
             return {
@@ -652,9 +650,7 @@ class TestComplexWorkflows:
                 session_data, invited_user, existing_share = await asyncio.gather(
                     loop.run_in_executor(executor, get_session_data, session_id),
                     get_user_profile(invited_email),
-                    loop.run_in_executor(
-                        executor, check_existing_share, session_id, invited_email
-                    ),
+                    loop.run_in_executor(executor, check_existing_share, session_id, invited_email),
                 )
 
             # Validation checks
@@ -669,12 +665,8 @@ class TestComplexWorkflows:
 
             with ThreadPoolExecutor(max_workers=2) as executor:
                 owner_role, invited_role, permission_check = await asyncio.gather(
-                    get_workspace_role(
-                        session_data["workspace_id"], owner_user["user_id"]
-                    ),
-                    get_workspace_role(
-                        session_data["workspace_id"], invited_user["user_id"]
-                    ),
+                    get_workspace_role(session_data["workspace_id"], owner_user["user_id"]),
+                    get_workspace_role(session_data["workspace_id"], invited_user["user_id"]),
                     loop.run_in_executor(
                         executor,
                         check_session_permissions,
@@ -688,15 +680,11 @@ class TestComplexWorkflows:
                 return {"error": "Permission denied"}
 
             # Create the share (this will show up in nested analysis)
-            share_data = create_session_share(
-                session_id, invited_email, owner_user["user_id"]
-            )
+            share_data = create_session_share(session_id, invited_email, owner_user["user_id"])
 
             # Background notification (fire and forget)
             asyncio.create_task(
-                send_notification_email(
-                    invited_email, f"Session {session_data['app_name']} shared"
-                )
+                send_notification_email(invited_email, f"Session {session_data['app_name']} shared")
             )
 
             return {
@@ -760,9 +748,7 @@ class TestComplexWorkflows:
 
                 return {"avg": avg, "total": sum(values), "variance": variance}
 
-            def format_output(
-                metrics: Dict[str, float], user_id: int
-            ) -> Dict[str, Any]:
+            def format_output(metrics: Dict[str, float], user_id: int) -> Dict[str, Any]:
                 """Nested output formatting."""
                 return {
                     "user_id": user_id,
@@ -833,9 +819,7 @@ class TestComplexWorkflows:
         assert result["user_id"] == 12345
         assert "metrics" in result
         print("✓ Nested business logic completed successfully")
-        print(
-            f"  User: {result['user_id']}, Metrics: {result['metrics']['avg']:.1f} avg"
-        )
+        print(f"  User: {result['user_id']}, Metrics: {result['metrics']['avg']:.1f} avg")
 
 
 class TestStressScenarios:

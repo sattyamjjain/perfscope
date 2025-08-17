@@ -147,7 +147,7 @@ class PerformanceLogger:
 
     def log_call_start(self, call_info: CallInfo, args: tuple, kwargs: dict) -> None:
         """Log function call start with production-ready format."""
-        if not self.config.log_calls:
+        if not self.config.log_enabled or not self.config.log_calls:
             return
 
         # Only log detailed tracing if explicitly enabled
@@ -160,7 +160,7 @@ class PerformanceLogger:
 
     def log_call_end(self, call_info: CallInfo, result: Any = None) -> None:
         """Log function call end with production-ready format."""
-        if not self.config.log_calls:
+        if not self.config.log_enabled or not self.config.log_calls:
             return
 
         # Log all significant function calls (not just root)
@@ -199,6 +199,8 @@ class PerformanceLogger:
 
     def log_exception(self, call_info: CallInfo, exception: Exception) -> None:
         """Log function exception."""
+        if not self.config.log_enabled:
+            return
         self.logger.error(
             f"ERROR[{call_info.qualname}] {exception.__class__.__name__}: {str(exception)} "
             f"after {call_info.metrics.wall_time * 1000:.2f}ms"
@@ -206,6 +208,8 @@ class PerformanceLogger:
 
     def log_summary(self, report: ProfileReport) -> None:
         """Log production-ready profiling summary."""
+        if not self.config.log_enabled:
+            return
         # Only log summary for meaningful profiles (>1ms total or with bottlenecks)
         if report.total_duration < 0.001 and not report.statistics:
             return
@@ -679,6 +683,7 @@ def profile(
     log_level: str = "INFO",
     log_calls: bool = True,
     log_args: bool = True,
+    log_enabled: bool = True,
     detailed_tracing: bool = False,
     report_path: str | Path | None = None,
     enabled: bool = True,
@@ -740,6 +745,7 @@ def profile(
             exclude_modules=exclude_modules or set(),
             log_calls=log_calls,
             log_args=log_args,
+            log_enabled=log_enabled,
             detailed_tracing=detailed_tracing,
             report_path=Path(report_path) if report_path else None,
             auto_report=report_path is not None,

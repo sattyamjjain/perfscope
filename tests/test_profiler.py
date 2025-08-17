@@ -7,6 +7,7 @@ import asyncio
 import gc
 import json
 import logging
+import os
 
 # Configure test logging to prevent interference with profiler
 import sys
@@ -22,8 +23,17 @@ from perfscope import (
     profile,
 )
 
-# Disable perfscope logging during tests to prevent output pollution
-logging.getLogger("perfscope").setLevel(logging.CRITICAL)
+# Completely disable perfscope logging during tests
+# Set via environment variable to ensure it applies before profiler initialization
+os.environ["PERFSCOPE_LOG_LEVEL"] = "CRITICAL"
+perfscope_logger = logging.getLogger("perfscope")
+perfscope_logger.setLevel(logging.CRITICAL)
+perfscope_logger.disabled = True
+
+# Also disable all handlers
+for handler in perfscope_logger.handlers[:]:
+    perfscope_logger.removeHandler(handler)
+
 # Configure root logger for test output only
 logging.basicConfig(level=logging.WARNING, format="%(message)s", force=True, stream=sys.stderr)
 

@@ -49,6 +49,7 @@ class ProfileConfig:
     log_calls: bool = True
     log_args: bool = True  # Enable argument logging by default
     log_level: str = "INFO"
+    log_enabled: bool = True  # Master switch to enable/disable all logging
     detailed_tracing: bool = False  # Enable detailed call tracing (verbose)
     report_path: Path | None = None
     auto_report: bool = True
